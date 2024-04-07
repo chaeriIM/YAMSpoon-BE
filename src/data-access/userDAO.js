@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const {User} = require('./model');
-// Ingredients model 가져오기
+// Ingredients model 가져오기 
+// Recipe model 가져오기
 
 class UserDAO {
 
