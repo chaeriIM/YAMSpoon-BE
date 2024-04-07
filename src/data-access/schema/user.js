@@ -32,15 +32,20 @@ const userSchema = new mongoose.Schema(
       default : false
     },
 
-    recipe : {
+    recipe : [{
       type : mongoose.Schema.Types.ObjectId,
       ref : 'Recipe',
-    },
+    }],
 
-    ingredients : {
+    ingredients : [{
       type : mongoose.Schema.Types.ObjectId,
       ref : 'Ingredients'
-    },
+    }],
+
+    verificationCode: {
+      type : String,
+      required : true,
+    } 
   }
 );
 
