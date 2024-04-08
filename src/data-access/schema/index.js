@@ -1,7 +1,9 @@
 const commentSchema = require("./comment");
-const postSchema = require("./post");
+const recipeSchema = require("./recipe");
+const ingredientSchema = require("./ingredient");
 
 module.exports = {
   commentSchema,
-  postSchema,
+  ingredientSchema,
+  recipeSchema,
 };
