@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-const {User} = require('./model');
+const { User } = require('./model');
 // Ingredients model 가져오기 
 // Recipe model 가져오기
 
@@ -12,24 +12,15 @@ class UserDAO {
     return user;
   }
 
+
   //@desc create userInfo
   async create (userData) {
-    const passwordRegex = /^.*[!@#$%^&*].{7,}$/;
-
-    if(!passwordRegex.test(userData.password)) {
-      throw new Error ('Password must contain at least 8 characters and special characters.');
-    }
-
-    if(!validator.isEmail(userData.email)) {
-      throw new Error ('Invalid email address');
-    }
-
     const user = new User.creat(userData).lean();
     return user;
   }
 
   //@desc update userInfo
-  async updeateUser (id, updateData) {
+  async updateUser (id, updateData) {
     const updateUser = await User.findByIdAndUpdate (id, updateData).lean();
 
     return updateUser;
@@ -97,27 +88,16 @@ class UserDAO {
 
   //@desc find userId
   async finduserId ( inputData ) {
-    const user = await User.findOne ( { name : inputData.name});
-
-    if(!user) {
-      throw new Error('User not found');
-    }
+    const user = await User.findOne ( { name : inputData.name, email : inputData.email});
     return user.id;
   }
 
   //@desc find user password
-  async finduserPassword ( inputData, temporaryPassword ) {
-    const user = await User.findOne ( {id : inputData.id, email : inputData.email } );
-
-    if(!user) {
-      throw new Error ('User not found');
-    }
-
-    user.password = temporaryPassword;
-    await user.save();
-
+  async finduserPassword ( inputData ) {
+    const user = await User.findOne ( { id : inputData.id, email : inputData.email});
     return user;
-  } 
+  }
+
 }
 
 module.exports = new UserDAO();
