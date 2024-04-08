@@ -26,10 +26,22 @@ if (process.env.MONGODB_URI === undefined) {
   );
 }
 
+const jwtSecret = process.env.JWT_SECRET;
+
+const mailId = process.env.MAIL_ID;
+
+const mailPassword = process.env.MAIL_PASSWORD;
+
 module.exports = {
   applicationName: process.env.APPLICATION_NAME ?? "app", // 어플리케이션 이름
 
   port: parseInt(process.env.PORT ?? "3000", 10), // 어플리케이션이 바인딩되는 포트
 
   mongoDBUri: process.env.MONGODB_URI, // mongoDB 연결 주소
+
+  jwtSecret: jwtSecret,
+
+  mailId : mailId,
+
+  mailPassword : mailPassword,
 };
