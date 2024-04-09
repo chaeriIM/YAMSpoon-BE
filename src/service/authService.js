@@ -6,8 +6,6 @@ const config = require('../config');
 const AppError = require('../misc/AppError');
 const commonErrors = require('../misc/commonErrors');
 const validator = require('validator');
-const nodemailer= require('nodemailer');
-const { mailService }= require('./');
 
 class AuthService {
 
@@ -60,7 +58,7 @@ class AuthService {
     if (!user) {
       throw new AppError(
         commonErrors.resourceNotFoundError,
-        "아이디 또는 비밀번호가 일치하지 않습니다.",
+        "사용자를 찾을 수 없습니다.",
         404,
       );
     }
@@ -70,12 +68,14 @@ class AuthService {
     if (!passwordMatch) {
       throw new AppError(
         commonErrors.resourceNotFoundError,
-        '아이디 또는 비밀번호가 일치하지 않습니다.',
-        404,
+        '비밀번호가 일치하지 않습니다.',
+        401,
       );
     }
 
-    const userToken = jwt.sign(user, config.jwtSecret);
+    const { id : userId } = user;
+
+    const userToken = jwt.sign({ userId }, config.jwtSecret);
     return userToken;
   }
 

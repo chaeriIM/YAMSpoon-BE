@@ -1,11 +1,11 @@
-const commentSchema = require("./comment");
-const recipeSchema = require("./recipe");
-const ingredientSchema = require("./ingredient");
+const { recipeCategorySchema, recipeSchema } = require("./recipe");
+const { ingredientCategorySchema, ingredientSchema } = require("./ingredient");
 const userSchema = require('./user')
 
 module.exports = {
-  commentSchema,
   ingredientSchema,
+  ingredientCategorySchema,
+  recipeCategorySchema,
   recipeSchema,
   userSchema
 };
