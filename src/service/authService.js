@@ -22,7 +22,8 @@ class AuthService {
     }
 
     const { password, ...restUserData } = userData;
-    const passwordRegex = /.^*[!@#$%^&*].{7,}$/;
+    const passwordRegex = /^(?=.*[!@#$%^&*]).{7,}$/;
+
 
     if (!passwordRegex.test(password)) {
       throw new AppError(
@@ -87,4 +88,4 @@ class AuthService {
   }
 }
 
-module.exports = AuthService ();
+module.exports = new AuthService ();

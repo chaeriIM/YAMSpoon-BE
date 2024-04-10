@@ -1,10 +1,6 @@
 const mongoose = require("mongoose");
 
 const recipeCategorySchema = new mongoose.Schema({
-  category_id: { 
-    type: String,
-    required: true 
-  },
   name: { 
     type: String,
     required: true 
