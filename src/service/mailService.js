@@ -1,9 +1,11 @@
 const nodemailer = require('nodemailer');
-const config = require('../config')
+const config = require('../config');
+const cookieParser = require('cookie-parser');
+const MongoStore = require('connect-mongo');
 
 class MailService {
   //@desc send mail
-  async sendVerificationEmail (email, verificationCode) {
+  async sendVerificationEmail (email) {
     const adminAccount = {
       service : 'gmail',
       auth: {
@@ -14,6 +16,7 @@ class MailService {
 
     const transporter = nodemailer.createTransport(adminAccount);
     const verificationCode = Math.floor(100000+Math.random()*900000);
+    req.session.verificationCode = verificationCode;
 
     const mailOptions =  {
       from : config.mailId,
@@ -23,15 +26,19 @@ class MailService {
     };
 
     await transporter.sendMail(mailOptions);
+
+    return verificationCode;
   }
 
   //@desc verify verificationCode
-  async verifyVerificationCode (savedCode, inputCode) {
+  async verifyVerificationCode (res, req, input) {
+    const savedCode = req.session.verificationCode;
+    const savedUserInput = req.cookies.userInputCode;
 
-    if (savedCode === inputCode) {
-      return true;
+    if(savedCode && savedUserInput && savedCode === inputCode && savedCode === savedInputUser) {
+      res.send('Verification Successful');
     } else {
-      return false;
+      res.send('Invalid Verification Code');
     }
   }
 }

@@ -32,6 +32,16 @@ const mailId = process.env.MAIL_ID;
 
 const mailPassword = process.env.MAIL_PASSWORD;
 
+const sessionSecret = process.env.SESSION_SECRET;
+
+const sessionResave = process.env.SESSION_RESAVE;
+
+const sessionSaveUninitialized = process.env.SESSION_SAVE_UNINITIALIZED;
+
+const sessionStoreUrl = process.env.SESSION_STORE_URL;
+
+const cookieMaxAge = process.env.COOKIE_MAX_AGE;
+
 module.exports = {
   applicationName: process.env.APPLICATION_NAME ?? "app", // 어플리케이션 이름
 
@@ -44,4 +54,14 @@ module.exports = {
   mailId : mailId,
 
   mailPassword : mailPassword,
+
+  sessionSecret: sessionSecret,
+
+  sessionResave: sessionResave,
+
+  sessionSaveUninitialized: sessionSaveUninitialized,
+  
+  sessionStoreUrl: sessionStoreUrl,
+  
+  cookieMaxAge: parseInt(cookieMaxAge) || 180000,
 };

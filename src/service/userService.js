@@ -80,10 +80,10 @@ class UserService {
   }
 
   //@desc reset user password
-  async resetPassword(userId, email, temporaryPassword) {
-    const user = await userDAO.findUserByIdAndEmail(userId, email);
+  async resetPassword(userId, newPassword) {
+    const user = await userDAO.findUserById(userId);
 
-    user.password = await bcrypt.hash(temporaryPassword, 12);
+    user.password = await bcrypt.hash(newPassword, 12);
     await user.save();
 
     return user;

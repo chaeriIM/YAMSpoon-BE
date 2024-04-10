@@ -13,16 +13,16 @@ class AuthService {
   async signUp(userData) {
     const user = await userDAO.findUserById(userData.id);
 
-    if (user) {
-      throw new AppError(
-        commonErrors.inputError,
-        "이미 사용 중인 아이디입니다.",
-        400,
-      );
-    }
+    // if (user) {
+    //   throw new AppError(
+    //     commonErrors.inputError,
+    //     "이미 사용 중인 아이디입니다.",
+    //     400,
+    //   );
+    // }
 
     const { password, ...restUserData } = userData;
-    const passwordRegex = /.^*[!@#$%^&*].{7,}$/;
+    const passwordRegex = /.^*[!@#$%^&*].{8,}$/;
 
     if (!passwordRegex.test(password)) {
       throw new AppError(
@@ -49,10 +49,39 @@ class AuthService {
 
     return newUser;
   }
-// 메일 인증 코드 확이하는 api
+
+  //@desc 아이디 중복 확인
+  async verifyId (id) {
+    const user = await userDAO.findUserById(id);
+
+    if(!user) {
+      throw new AppError (
+        commonErrors.inputError,
+        '이미 사용 중인 아이디입니다.',
+        400,
+      );
+    }
+
+    return { message : '사용 가능한 아이디입니다.'};
+  }
+
+  //@desc 닉네임 확인 
+  async verifyNickname (nickname) {
+    const user = await userDAO.findUserById(nickname);
+
+    if(!user) {
+      throw new AppError (
+        commonErrors.inputError,
+        '이미 사용 중인 닉네임입니다.',
+        400,
+      );
+    }
+
+    return { message : '사용 가능한 닉네임입니다.'};
+  }
 
   //@desc 사용자 인증
-  async getLogin(id, plainPassword) {
+  async Login( {id, plainPassword} ) {
     const user = await userDAO.findUserById(id);
 
     if (!user) {
@@ -87,4 +116,4 @@ class AuthService {
   }
 }
 
-module.exports = AuthService ();
+module.exports = AuthService();
