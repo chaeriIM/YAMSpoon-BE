@@ -18,12 +18,12 @@ class MailService {
     const verificationCode = Math.floor(100000+Math.random()*900000);
     req.session.verificationCode = verificationCode;
 
-//     const mailOptions =  {
-//       from : config.mailId,
-//       to: email,
-//       subject: 'YAMSpoon 인증 이메일',
-//       text: `메일 인증을 완료하려면 다음 인증번호를 입력하세요: ${verificationCode}`,
-//     };
+    const mailOptions =  {
+      from : config.mailId,
+      to: email,
+      subject: 'YAMSpoon 인증 이메일',
+      text: `메일 인증을 완료하려면 다음 인증번호를 입력하세요: ${verificationCode}`,
+    };
 
     await transporter.sendMail(mailOptions);
 
@@ -43,4 +43,4 @@ class MailService {
   }
 }
 
-// module.exports = new MailService ();
+module.exports = new MailService ();
