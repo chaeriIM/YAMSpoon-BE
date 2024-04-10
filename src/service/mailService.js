@@ -16,7 +16,6 @@ class MailService {
 
     const transporter = nodemailer.createTransport(adminAccount);
     const verificationCode = Math.floor(100000+Math.random()*900000);
-    req.session.verificationCode = verificationCode;
 
     const mailOptions =  {
       from : config.mailId,
@@ -28,18 +27,6 @@ class MailService {
     await transporter.sendMail(mailOptions);
 
     return verificationCode;
-  }
-
-  //@desc verify verificationCode
-  async verifyVerificationCode (res, req, input) {
-    const savedCode = req.session.verificationCode;
-    const savedUserInput = req.cookies.userInputCode;
-
-    if(savedCode && savedUserInput && savedCode === inputCode && savedCode === savedInputUser) {
-      res.send('Verification Successful');
-    } else {
-      res.send('Invalid Verification Code');
-    }
   }
 }
 

@@ -65,11 +65,11 @@ const userController = {
   },
 
   //@desc get user fridge
-  //@route GET /user/{id}/fridge
+  //@route GET /user/fridge
   async getUserFridge (req,res,next) {
     try {
-      const userId = req.params.id;
-      const fridgeRecipe = await userService.getUserFridge(userId);
+      const { id } = res.locals.user; 
+      const fridgeRecipe = await userService.getUserFridge(id);
       res.status(200).json(utils.buildResponse(fridgeRecipe));
     } catch (error) {
       next(error);
@@ -77,12 +77,12 @@ const userController = {
   },
 
   //@desc update user ingredients
-  //@route PUT /user/{id}/fridge
+  //@route PUT /user/fridge
   async putUpdateUserIngredients (req,res,next) {
     try {
-      const userId = req.params.id;
+      const { id } = res.locals.user; 
       const updateData = req.body;
-      const updateIngredients = await userService.updateUserIngredients(userId, updateData);
+      const updateIngredients = await userService.updateUserIngredients(id, updateData);
       res.status(200).json(utils.buildResponse(updateIngredients));
     } catch (error) {
       next(error);
@@ -90,12 +90,12 @@ const userController = {
   },
 
   //@desc update user bookmark
-  //@route PUT /user/{id}/bookmark
+  //@route PUT /user/bookmark
   async putUpdateBookmark (req,res,next) {
     try {
-      const userId = req.params.id;
+      const { id } = res.locals.user; 
       const updateData = req.body;
-      const updateBookmark = await userService.updateBookmark(userId,updateData);
+      const updateBookmark = await userService.updateBookmark(id,updateData);
       res.status(200).json(utils.buildResponse(updateBookmark));
     } catch (error) {
       next(error);

@@ -1,7 +1,7 @@
-const commentMiddleware = require("./commentMiddleware");
-const postMiddleware = require("./postMiddleware");
+const mailMiddleware = require('./mailMiddleware');
+const authMiddleware = require('./authMiddleware');
 
 module.exports = {
-  commentMiddleware,
-  postMiddleware,
+  mailMiddleware,
+  authMiddleware,
 };

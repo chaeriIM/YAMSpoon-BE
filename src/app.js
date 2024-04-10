@@ -43,6 +43,8 @@ async function create() {
     swaggerUi.setup(swaggerDocument)
   );
 
+  expressApp.use(cookieParser());
+
   expressApp.use(
     session({
       secret: config.sessionSecret,

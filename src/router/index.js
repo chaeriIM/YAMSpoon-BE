@@ -1,5 +1,4 @@
 const express = require("express");
-const postRouter = require("./postRouter");
 const recipeRouter = require("./recipeRouter");
 const ingredientRouter = require("./ingredientRouter");
 
