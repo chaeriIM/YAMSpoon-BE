@@ -1,5 +1,7 @@
 const nodemailer = require('nodemailer');
-const config = require('../config')
+const config = require('../config');
+const cookieParser = require('cookie-parser');
+const MongoStore = require('connect-mongo');
 
 class MailService {
   //@desc send mail
@@ -23,15 +25,19 @@ class MailService {
     };
 
     await transporter.sendMail(mailOptions);
+
+    return verificationCode;
   }
 
   //@desc verify verificationCode
-  async verifyVerificationCode (savedCode, inputCode) {
+  async verifyVerificationCode (res, req, input) {
+    const savedCode = req.session.verificationCode;
+    const savedUserInput = req.cookies.userInputCode;
 
-    if (savedCode === inputCode) {
-      return true;
+    if(savedCode && savedUserInput && savedCode === inputCode && savedCode === savedInputUser) {
+      res.send('Verification Successful');
     } else {
-      return false;
+      res.send('Invalid Verification Code');
     }
   }
 }
