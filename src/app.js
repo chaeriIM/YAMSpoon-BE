@@ -11,6 +11,9 @@ const AppError = require("./misc/AppError");
 const commonErrors = require("./misc/commonErrors");
 const apiRouter = require("./router");
 
+const cookieParser = require('cookie-parser');
+const MongoStore = require('connect-mongo');
+
 // express application을 "생성"해주는 함수
 async function create() {
   // MongoDB에 연결
@@ -40,6 +43,15 @@ async function create() {
     swaggerUi.setup(swaggerDocument)
   );
 
+  expressApp.use(
+    session({
+      secret: config.sessionSecret,
+      resave: config.sessionResave,
+      saveUninitialized: config.sessionSaveUninitialized,
+      store: MongoStore.create({ mongoUrl: config.sessionStoreUrl }),
+      cookie: { maxAge: config.cookieMaxAge },
+    })
+  )
   // 해당되는 URL이 없을 때를 대비한 미들웨어
   expressApp.use((req, res, next) => {
     next(

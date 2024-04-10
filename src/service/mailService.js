@@ -5,7 +5,7 @@ const MongoStore = require('connect-mongo');
 
 class MailService {
   //@desc send mail
-  async sendVerificationEmail (email, verificationCode) {
+  async sendVerificationEmail (email) {
     const adminAccount = {
       service : 'gmail',
       auth: {
@@ -16,6 +16,7 @@ class MailService {
 
     const transporter = nodemailer.createTransport(adminAccount);
     const verificationCode = Math.floor(100000+Math.random()*900000);
+    req.session.verificationCode = verificationCode;
 
     const mailOptions =  {
       from : config.mailId,
