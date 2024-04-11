@@ -12,7 +12,7 @@ const mailController = {
     const { email } = req.body;
     try {
       const verificationCode = await mailService.sendVerificationEmail(email);
-      req.session.verificationCode = verificationCode; // 세션에 저장
+      req.session.verificationCode = verificationCode; 
       res.cookie('userInputCode', verificationCode).status(200).json({ message: 'Verification email sent', verificationCode });
     } catch (error) {
       console.error('이메일 전송 중 오류가 발생했습니다:', error);
@@ -28,4 +28,4 @@ const mailController = {
   }
 };
 
-module.exports = new mailController;
+module.exports = mailController;

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema(
   {
-    id : {
+    userId : {
       type : String,
       required : true,
     },
@@ -42,10 +42,6 @@ const userSchema = new mongoose.Schema(
       ref : 'Ingredients'
     }],
 
-    verificationCode: {
-      type : String,
-      required : true,
-    } 
   }
 );
 

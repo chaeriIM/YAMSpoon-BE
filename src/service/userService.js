@@ -2,6 +2,7 @@
 const { userDAO } = require('../data-access');
 const AppError = require('../misc/AppError');
 const commonErrors = require('../misc/commonErrors');
+const bcrypt = require('bcrypt');
 
 class UserService {
 
@@ -43,10 +44,17 @@ class UserService {
       );
     }
 
-    const updateUser = await userDAO.updateUser(updateData);
+    const updateUser = await userDAO.updateUser(id,updateData);
 
     return updateUser
   }
+  
+    //@desc delete userInfo
+    async deleteUserInfo (id) {
+      const deletedUser = await userDAO.deleteUser(id);
+  
+      return deletedUser;
+    }
 
 
   //@desc find userId
@@ -81,9 +89,19 @@ class UserService {
 
   //@desc reset user password
   async resetPassword(userId, newPassword) {
-    const user = await userDAO.findUserById(userId);
+    const user = await userDAO.findUserByUserId(userId);
+    console.log(user)
+
+    if(!user) {
+      throw new AppError (
+        commonErrors.resourceNotFoundError,
+        '해당하는 사용자를 찾을 수 없습니다.',
+        404,
+      )
+    }
 
     user.password = await bcrypt.hash(newPassword, 12);
+    // console.log(user.password);
     await user.save();
 
     return user;
@@ -92,7 +110,7 @@ class UserService {
   //@desc get user fridge recipe
   async getUserFridge (id) {
     const user = await userDAO.findUserById(id);
-
+    // console.log(user);
     if(!user) {
       throw new AppError(
         commonErrors.resourceNotFoundError,

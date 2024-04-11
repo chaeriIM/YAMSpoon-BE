@@ -10,19 +10,19 @@ const validator = require('validator');
 class AuthService {
 
   //@desc 사용자 등록
-  async signUp(userData) {
-    const user = await userDAO.findUserById(userData.id);
+  async signUp({ userId, name, email, password, nickname, isAdmin }) {
+    const user = await userDAO.findUserByUserId(userId);
+    console.log(user);
 
-    // if (user) {
-    //   throw new AppError(
-    //     commonErrors.inputError,
-    //     "이미 사용 중인 아이디입니다.",
-    //     400,
-    //   );
-    // }
+    if (user !== null) {
+      throw new AppError(
+        commonErrors.inputError,
+        "이미 사용 중인 아이디입니다.",
+        400,
+      );
+    }
 
-    const { password, ...restUserData } = userData;
-    const passwordRegex = /.^*[!@#$%^&*].{8,}$/;
+    const passwordRegex = /^(?=.*[!@#$%^&*]).{8,}$/;
 
     if (!passwordRegex.test(password)) {
       throw new AppError(
@@ -34,7 +34,7 @@ class AuthService {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    if (!validator.isEmail(userData.email)) {
+    if (!validator.isEmail(email)) {
       throw new AppError(
         commonErrors.inputError,
         '유효하지 않은 이메일 주소입니다.',
@@ -42,19 +42,30 @@ class AuthService {
       );
     }
     
-    const newUser = await userDAO.create({
-      ...restUserData,
-      password: hashedPassword,
+    const newUser = await userDAO.create({ 
+      userId, 
+      name, 
+      email, 
+      password : hashedPassword, 
+      nickname, 
+      isAdmin 
     });
 
-    return newUser;
+    return {
+      id: newUser._id,
+      userId : newUser.userId,
+      name: newUser.name,
+      email: newUser.email,
+      nickname : newUser.nickname,
+      isAdmin : newUser.isAdmin,
+    };
   }
 
   //@desc 아이디 중복 확인
-  async verifyId (id) {
-    const user = await userDAO.findUserById(id);
+  async verifyId (userId) {
+    const user = await userDAO.findUserByUserId(userId);
 
-    if(!user) {
+    if(user) {
       throw new AppError (
         commonErrors.inputError,
         '이미 사용 중인 아이디입니다.',
@@ -67,9 +78,9 @@ class AuthService {
 
   //@desc 닉네임 확인 
   async verifyNickname (nickname) {
-    const user = await userDAO.findUserById(nickname);
+    const user = await userDAO.findUserByNickname(nickname);
 
-    if(!user) {
+    if(user) {
       throw new AppError (
         commonErrors.inputError,
         '이미 사용 중인 닉네임입니다.',
@@ -81,8 +92,9 @@ class AuthService {
   }
 
   //@desc 사용자 인증
-  async Login( {id, plainPassword} ) {
-    const user = await userDAO.findUserById(id);
+  async Login( {userId, plainPassword} ) {
+    const user = await userDAO.findUserByUserId(userId);
+    console.log(userId);
 
     if (!user) {
       throw new AppError(
@@ -102,18 +114,15 @@ class AuthService {
       );
     }
 
-    const { id : userId } = user;
+    const userToken = jwt.sign({
+      id: user._id,
+      userId,
+      isAdmin: user.isAdmin,
+    }, config.jwtSecret);
 
-    const userToken = jwt.sign({ userId }, config.jwtSecret);
     return userToken;
   }
 
-  //@desc delete userInfo
-  async deleteUserInfo (id) {
-    const deletedUser = await userDAO.deleteUser(id);
-
-    return deletedUser;
-  }
 }
 
 module.exports = new AuthService ();

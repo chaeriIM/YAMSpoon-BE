@@ -1,6 +1,8 @@
 const express = require("express");
 const recipeRouter = require("./recipeRouter");
 const ingredientRouter = require("./ingredientRouter");
+const authRouter = require('./authRouter');
+const userRouter = require('./userRouter');
 
 // 버전 1용 라우터.
 // REST API의 경우 버저닝을 통해 새로운 API들을 추가하거나, 기존 API들을 보강해서 출시한다.
@@ -10,7 +12,9 @@ const ingredientRouter = require("./ingredientRouter");
 // API를 개발할 때는 책임감을 가지고 "개발"하고 "테스트"하고 "배포"하고 "관리"해야한다.
 const v1Router = express.Router();
 
-//v1Router.use("/posts", postRouter);
+
+v1Router.use('/auth', authRouter);
+v1Router.use('/user',userRouter);
 v1Router.use("/recipes", recipeRouter);
 v1Router.use("/ingredients", ingredientRouter);
 

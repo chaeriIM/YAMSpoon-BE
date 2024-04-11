@@ -12,6 +12,7 @@ const commonErrors = require("./misc/commonErrors");
 const apiRouter = require("./router");
 
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
 const MongoStore = require('connect-mongo');
 
 // express application을 "생성"해주는 함수

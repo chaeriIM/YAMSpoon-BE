@@ -3,11 +3,11 @@ const utils = require('../misc/utils');
 
 const userController = {
   //@desc get userInfo
-  //@route GET /user/{id}
+  //@route GET /user/
   async getUserInfo (req,res,next) {
     try {
-      const userId = req.params.id;
-      const userInfo = await userService.getUserInfo(userId);
+      const { id } = res.locals.user;
+      const userInfo = await userService.getUserInfo(id);
       res.status(200).json(utils.buildResponse(userInfo));
     } catch (error) {
       next(error);
@@ -15,12 +15,12 @@ const userController = {
   },
 
   //@desc update userInfo
-  //@route PUT / user/{id}
+  //@route PUT / user/
   async putUpdateUser (req,res,next) {
     try {
-      const userId = req.params.id;
+      const { id } = res.locals.user;
       const updateInfo = req.body;
-      const updateUser = await userService.updateUser(userId, updateInfo);
+      const updateUser = await userService.updateUser(id, updateInfo);
       res.status(200).json(utils.buildResponse(updateUser));
     } catch (error) {
       next(error);
@@ -55,12 +55,28 @@ const userController = {
   //@route PUT /resetPassword/{id}
   async putResetPassword (req,res,next) {
     try {
-      const userId = req.params.id;
-      const newPassword = req.body;
-      const updatePassword = await userService.resetPassword(userId, newPassword);
-      res.status(200).json(utils.buildResponse(updatePassword));
+      const userId = req.params.userId;
+      const newPassword = req.body.newPassword;
+      console.log(newPassword);
+      const updateUser = await userService.resetPassword(userId, newPassword);
+      res.status(200).json(utils.buildResponse(updateUser));
     } catch (error) {
       next(error);
+    }
+  },
+
+  //@desc delete userInfo
+  //@route DELETE /user/
+  async deleteUserInfo (req,res,next) {
+    try {
+      const { id } = res.locals.user; 
+      const deleteUser = await userService.deleteUserInfo(id);
+      res.status(200).json ({
+        message: '사용자가 성공적으로 삭제되었습니다.',
+        user: deleteUser,
+      });
+    } catch (error) {
+      next (error);
     }
   },
 
