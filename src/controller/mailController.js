@@ -1,4 +1,4 @@
-const mailService = require('../service');
+const mailService = require('../service/mailService');
 const nodemailer = require('nodemailer');
 const config = require('../config');
 const cookieParser = require('cookie-parser');
