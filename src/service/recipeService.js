@@ -46,12 +46,12 @@ class RecipeService {
 
   //레시피 타입별 페이지네이션
   async getRecipesByCategoryIdPaginated(categoryId, page, limit) {
-    return await RecipeDAO.findByCategoryIdPaginated(categoryId, page, limit);
+    return await recipeDAO.findByCategoryIdPaginated(categoryId, page, limit);
   }
   
   // 레시피 검색 결과
   async searchRecipesPaginated(keyword, page, limit =15, sort = 'score') {
-    return await RecipeDAO.findByTextPaginated(keyword, page, limit, sort);
+    return await recipeDAO.findByTextPaginated(keyword, page, limit, sort);
   }
     
 }
