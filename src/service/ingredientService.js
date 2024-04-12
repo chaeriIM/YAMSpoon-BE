@@ -1,12 +1,12 @@
-const { IngredientDAO } = require('../data-access');
+const { ingredientDAO } = require('../data-access');
 
 class ingredientService {
   getAllCategories() {
-    return IngredientDAO.findAllCategories();
+    return ingredientDAO.findAllCategories();
   }
 
   getIngredientsByCategoryId(categoryId) {
-    return IngredientDAO.findIngredientsByCategoryId(categoryId);
+    return ingredientDAO.findIngredientsByCategoryId(categoryId);
   }
 }
 
