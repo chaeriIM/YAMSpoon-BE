@@ -7,14 +7,16 @@ class RecipeDAO {
   //   return recipe.toObject();
   // }
 
-  /** 아이디 개별 조회 */
+  /** 전체 레시피 조회 */
+  async findAll() {
+    return await Recipe.find({}).lean();
+  }
+
+  /** 레시피 아이디 개별 조회 */
   async findById(id) {
     return await Recipe.findById(id).lean();
   }
 
-  async findAll() {
-    return await Recipe.find({}).lean();
-  }
 
   /** 레시피 카테고리 조회 */
   async findByCategory(categoryId) {
@@ -61,7 +63,12 @@ class RecipeDAO {
   
   /** 검색 결과 페이지 */
   async searchRecipesPaginated(keyword, page, limit, sort = 'score') {
-    const query = { $text: { $search: keyword } };
+    const query =  [
+      {$search : {
+      index : 'title_index',
+      text : { query : keyword, path : 'title' }
+      }}
+    ]
     let sortOptions = { score: { $meta: "textScore" } };  // 기본값은 텍스트 검색 점수 순
 
     if (sort === 'recent') {
@@ -70,11 +77,10 @@ class RecipeDAO {
         sortOptions = { 'like.length': -1 };  // 추천순 정렬
     }
 
-    const recipes = await Recipe.find(query)
+    const recipes = await Recipe.aggregate(query)
                                 .sort(sortOptions)
                                 .skip((page - 1) * limit)
                                 .limit(limit)
-                                .lean();
     const total = await Recipe.countDocuments(query);
 
     return {

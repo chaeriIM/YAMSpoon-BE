@@ -36,7 +36,7 @@ const recipeController = {
   async listRecipesByIngredient(req, res, next) {
     try {
       const { ingredientId } = req.params;
-      const recipes = await recipeService.getRecipesByIngredientId(ingredientId);
+      const recipes = await recipeService.getRecipesByIngredientIdPaginated(ingredientId);
       res.json(utils.buildResponse(recipes));
     } catch (err) {
       next(err);
@@ -47,7 +47,7 @@ const recipeController = {
   async listRecipesByCategory(req, res, next) {
     try {
       const { categoryId } = req.params;
-      const recipes = await recipeService.getRecipesByCategoryId(categoryId);
+      const recipes = await recipeService.getRecipesByCategoryIdPaginated(categoryId);
       res.json(utils.buildResponse(recipes));
     } catch (err) {
       next(err);

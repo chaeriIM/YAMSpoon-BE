@@ -6,6 +6,9 @@ const recipeRouter = express.Router();
 // 전체 레시피 조회
 recipeRouter.get('/', recipeController.listAllRecipes);
 
+// 레시피 검색
+recipeRouter.get('/search', recipeController.searchRecipes);
+
 // 인기 레시피 조회
 recipeRouter.get('/popular', recipeController.listPopularRecipes);
 
@@ -24,7 +27,5 @@ recipeRouter.get('/:id', recipeController.getRecipe);
 // 레시피 좋아요 수 업데이트
 recipeRouter.put('/:id/like', recipeController.updateRecipeLikes);
 
-// 레시피 검색
-recipeRouter.get('/search', recipeController.searchRecipes);
 
 module.exports = recipeRouter;
