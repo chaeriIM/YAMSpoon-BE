@@ -6,10 +6,13 @@ const MongoStore = require('connect-mongo');
 const isVerified = (req, res, next) => {
   const { verificationCode } = req.body;
 
+
   try {
     const storedVerificationCode = req.session.verificationCode;
+    console.log(storedVerificationCode);
 
-    if (verificationCode === storedVerificationCode) {
+    if (verificationCode == storedVerificationCode) {
+
       next();
     } else {
       res.status(400).json({ message: 'Invalid verification code' });

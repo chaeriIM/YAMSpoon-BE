@@ -32,7 +32,7 @@ const userController = {
   async postUserId (req,res,next) {
     try {
       const { name, email } = req.body;
-      const userId = await userService.findUserIdByNameAndEmail({ name, email });
+      const userId = await userService.findUserIdByNameAndEmail(name, email);
       res.status(200).json(utils.buildResponse(userId));
     } catch (error) {
       next(error);
@@ -44,7 +44,7 @@ const userController = {
   async postUserPassword (req,res,next) {
     try {
       const { userId, email } = req.body;
-      const user = await userService.findUserPasswordByIdAndEmail( {userId, email });
+      const user = await userService.findUserPasswordByIdAndEmail(userId, email);
       res.status(200).json(utils.buildResponse(user));
     } catch (error) {
       next(error);
@@ -57,7 +57,6 @@ const userController = {
     try {
       const userId = req.params.userId;
       const newPassword = req.body.newPassword;
-      console.log(newPassword);
       const updateUser = await userService.resetPassword(userId, newPassword);
       res.status(200).json(utils.buildResponse(updateUser));
     } catch (error) {

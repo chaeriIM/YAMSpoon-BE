@@ -112,14 +112,14 @@ class UserDAO {
   }
 
   //@desc find userId
-  async finduserId ( inputData ) {
-    const user = await User.findOne ( { name : inputData.name, email : inputData.email});
-    return user.id;
+  async finduserId ( name, email ) {
+    const user = await User.findOne ( { name, email });
+    return user;
   }
 
   //@desc find user password
-  async finduserPassword ( inputData ) {
-    const user = await User.findOne ( { id : inputData.id, email : inputData.email});
+  async finduserPassword ( userId, email ) {
+    const user = await User.findOne ( { userId, email });
     return user;
   }
 
