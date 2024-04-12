@@ -68,48 +68,55 @@ class UserDAO {
   }
 
   //@desc update ingredients in fridge
-  async updateIngredients (id, updateData) {
-    const user = await User.findById(id);
-    if(!user) {
-      throw new Error ('User not found');
-    }
-
-    for (const ingredientsId of updateData) {
-      const id = await Ingredient.findById(ingredientsId);
-
-      if(!id) {
-        throw new Error (`Invalid Ingredient ID : ${ingredientsId}`);
-      }
-    }
-
-    user.ingredients = updateData;
-
-    await user.save();
-
-    return user;
-  }
-
-  //@desc update bookmark recipe 
-  async updateBookmark (id, updateData) {
+  async updateIngredients(id, updateData) {
     const user = await User.findById(id);
     if (!user) {
-      throw new Error ('User not found');
+      throw new Error('User not found');
     }
-
-    for (const recipeId of updateData) {
-      const id = await Recipe.findById(recipeId);
-
-      if (!id) {
-        throw new Error (`Invalid Recipe ID: ${recipeId}`);
+  
+    for (const ingredientId of updateData) {
+      const ingredient = await Ingredient.findById(ingredientId);
+      if (!ingredient) {
+        throw new Error(`Invalid Ingredient ID: ${ingredientId}`);
       }
+  
 
-      user.recipe = updateData;
+      const existingIngredientIndex = user.ingredients.findIndex(item => item.equals(ingredient._id));
+      if (existingIngredientIndex === -1) {
 
-      await user.save();
-
-      return user;
+        user.ingredients.push(ingredient);
+      }
     }
+  
+    await user.save(); 
+  
+    return user;
   }
+  
+  //@desc update bookmark recipe 
+  async updateBookmark(id, updateData) {
+    const user = await User.findById(id);
+    if (!user) {
+      throw new Error('User not found');
+    }
+  
+    const recipes = [];
+  
+    for (const recipeId of updateData) {
+      const recipe = await Recipe.findById(recipeId);
+      if (!recipe) {
+        throw new Error(`Invalid Recipe ID: ${recipeId}`);
+      }
+      recipes.push(recipe);
+    }
+  
+    user.recipes = recipes; 
+  
+    await user.save(); 
+  
+    return user;
+  }
+  
 
   //@desc find userId
   async finduserId ( name, email ) {

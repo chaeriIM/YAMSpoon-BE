@@ -1,5 +1,7 @@
 // find user & update user
 const { userDAO } = require('../data-access');
+const { recipeDAO } = require('../data-access');
+const { ingredientDAO } =require('../data-access');
 const AppError = require('../misc/AppError');
 const commonErrors = require('../misc/commonErrors');
 const bcrypt = require('bcrypt');
@@ -9,6 +11,7 @@ class UserService {
   //@desc find user info by ID
   async getUserInfo (id) {
     const user = await userDAO.findUserById(id);
+
     if(!user) {
       throw new AppError(
         commonErrors.resourceNotFoundError,
@@ -107,53 +110,60 @@ class UserService {
     return user;
   }
   
-  //@desc get user fridge recipe
-  async getUserFridge (id) {
+  //@desc get user fridge 
+  async getUserFridge(id) {
     const user = await userDAO.findUserById(id);
-    // console.log(user);
-    if(!user) {
+    if (!user) {
       throw new AppError(
         commonErrors.resourceNotFoundError,
         '해당하는 사용자를 찾을 수 없습니다.',
         404,
       );
     }
-
-    return user.recipe;
+  
+    const ingredients = [];
+  
+    for (const ingredientId of user.ingredients) {
+      const ingredient = await ingredientDAO.findIngredientsById(ingredientId);
+      console.log(ingredient);
+      ingredients.push(ingredient); 
+    }
+  
+    return ingredients;
   }
+
+    //@desc get user bookmark
+    async getUserBookmark(id) {
+      const user = await userDAO.findUserById(id);
+      if (!user) {
+        throw new AppError(
+          commonErrors.resourceNotFoundError,
+          '해당하는 사용자를 찾을 수 없습니다.',
+          404,
+        );
+      }
+    
+      const recipes = [];
+    
+      for (const recipeId of user.recipe) {
+        const recipe = await recipeDAO.findById(recipeId);
+        // console.log(ingredient);
+        recipes.push(recipe); 
+      }
+    
+      return recipes; 
+    }
 
   //@desc update user ingredients
   async updateUserIngredients (id,updateIngredients) {
-    const user = await userDAO.findUserById(id);
-
-    if(!user) {
-      throw new AppError(
-        commonErrors.resourceNotFoundError,
-        '해당하는 사용자를 찾을 수 없습니다.',
-        404,
-      );
-    }
-
-    const updateInfo = await userDAO.updateUser(id, updateIngredients);
-
-    return updateInfo;
+    const user = await userDAO.updateIngredients(id,updateIngredients);
+    return user;
   }
 
   //@desc update user bookmark
   async updateBookmark (id, updateBookmark) {
-    const user = await userDAO.findUserById(id);
-
-    if(!user) {
-      throw new AppError(
-        commonErrors.resourceNotFoundError,
-        '해당하는 사용자를 찾을 수 없습니다.',
-        404,
-      );
-    }
-
-    const updateInfo = await userDAO.updateUser(id, updateBookmark);
-
-    return updateInfo;
+    const user = await userDAO.updateBookmark(id,updateBookmark);
+    return user;
   }
 }
 

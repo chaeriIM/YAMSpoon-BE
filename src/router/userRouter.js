@@ -50,6 +50,13 @@ userRouter.get(
   userController.getUserFridge
 );
 
+//@desc GET api/v1/user/bookmark
+userRouter.get(
+  '/bookmark',
+  authMiddleware.isAuthenticated,
+  userController.getUserBookmark
+)
+
 //@desc PUT api/v1/user/fridge
 userRouter.put(
   '/fridge',

@@ -84,7 +84,21 @@ const userController = {
   async getUserFridge (req,res,next) {
     try {
       const { id } = res.locals.user; 
+      console.log(id);
       const fridgeRecipe = await userService.getUserFridge(id);
+      res.status(200).json(utils.buildResponse(fridgeRecipe));
+    } catch (error) {
+      next(error);
+    }
+  },
+
+    //@desc get user bookmark
+  //@route GET /user/bookmark
+  async getUserBookmark (req,res,next) {
+    try {
+      const { id } = res.locals.user; 
+      console.log(id);
+      const bookmarkRecipe = await userService.getUserBookmark(id);
       res.status(200).json(utils.buildResponse(fridgeRecipe));
     } catch (error) {
       next(error);
