@@ -58,8 +58,8 @@ class UserService {
 
 
   //@desc find userId
-  async findUserIdByNameAndEmail (inputData) {
-    const user = await userDAO.finduserId(inputData);
+  async findUserIdByNameAndEmail (name, email) {
+    const user = await userDAO.finduserId(name, email);
 
     if(!user) {
       throw new AppError(
@@ -69,12 +69,12 @@ class UserService {
       );
     }
 
-    return user.id;
+    return user.userId;
   }
 
   //@ find userPassword
-  async findUserPasswordByIdAndEmail (inputData) {
-    const user = await userDAO.findUserByNameAndEmail (inputData);
+  async findUserPasswordByIdAndEmail (userId, email) {
+    const user = await userDAO.finduserPassword (userId, email);
 
     if(!user) {
       throw new AppError(

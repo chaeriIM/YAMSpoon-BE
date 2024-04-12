@@ -32,6 +32,18 @@ async function create() {
     });
   });
 
+  
+  expressApp.use(cookieParser());
+
+  expressApp.use(
+    session({
+      secret: config.sessionSecret,
+      resave: config.sessionResave,
+      saveUninitialized: config.sessionSaveUninitialized,
+      store: MongoStore.create({ mongoUrl: config.sessionStoreUrl }),
+      cookie: { maxAge: config.cookieMaxAge },
+    })
+  )
   // version 1의 api router를 등록
   expressApp.use("/api/v1", apiRouter.v1);
 
@@ -44,17 +56,6 @@ async function create() {
     swaggerUi.setup(swaggerDocument)
   );
 
-  expressApp.use(cookieParser());
-
-  expressApp.use(
-    session({
-      secret: config.sessionSecret,
-      resave: config.sessionResave,
-      saveUninitialized: config.sessionSaveUninitialized,
-      store: MongoStore.create({ mongoUrl: config.sessionStoreUrl }),
-      cookie: { maxAge: config.cookieMaxAge },
-    })
-  )
   // 해당되는 URL이 없을 때를 대비한 미들웨어
   expressApp.use((req, res, next) => {
     next(
