@@ -4,16 +4,16 @@ const utils = require('../misc/utils');
 const ingredientController = {
   
   
-  async listAllCategories(req, res) {
+  async listAllCategories(req, res, next) {
     try {
       const categories = await ingredientService.getAllCategories();
-      res.json(utils.buildResponse(categories));
+      res.status(200).json(utils.buildResponse(categories));
     } catch (err) {
       next(err);
     }
   },
 
-  async listIngredientsByCategory(req, res) {
+  async listIngredientsByCategory(req, res, next) {
     const { categoryId } = req.params.categoryId;
     const categoryWithIngredients = await ingredientService.getIngredientsByCategoryId(categoryId);
     try {

@@ -1,13 +1,13 @@
-const { ingredientDAO } = require('../data-access');
+const { IngredientDAO } = require('../data-access');
 
-class IngredientService {
+class ingredientService {
   getAllCategories() {
-    return ingredientDAO.findAllCategories();
+    return IngredientDAO.findAllCategories();
   }
 
   getIngredientsByCategoryId(categoryId) {
-    return ingredientDAO.findIngredientsByCategoryId(categoryId);
+    return IngredientDAO.findIngredientsByCategoryId(categoryId);
   }
 }
 
-module.exports = new IngredientService();
+module.exports = new ingredientService();

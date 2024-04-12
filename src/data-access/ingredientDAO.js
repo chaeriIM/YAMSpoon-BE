@@ -1,13 +1,14 @@
-const { Ingredient, IngredientCategory } = require('./model');
+const { Ingredient } = require('./model')
+const {Ingredient_Category } = require('./model');
 
-class IngredientDAO {
+class ingredientDAO {
   async findAllCategories() {
-    return await IngredientCategory.find().lean();
+    return await Ingredient_Category.find().lean();
   }
 
   async findIngredientsByCategoryId(categoryId) {
-    return await IngredientCategory.findById(categoryId).populate('ingredients').lean();
+    return await Ingredient_Category.findById(categoryId).populate('ingredients').lean();
   }
 }
 
-module.exports = new IngredientDAO();
+module.exports = new ingredientDAO();
