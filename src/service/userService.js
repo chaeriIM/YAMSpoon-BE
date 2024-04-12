@@ -18,7 +18,7 @@ class UserService {
     }
 
     const userInfo = {
-      id : user.id,
+      userId : user.userId,
       name : user.name,
       email : user.email,
       password : user.password,
