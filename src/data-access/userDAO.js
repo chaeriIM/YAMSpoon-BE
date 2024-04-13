@@ -68,16 +68,17 @@ class UserDAO {
   }
 
   //@desc update ingredients in fridge
-  async updateIngredients(id, updateData) {
+  async updateIngredients(id, ingredientInfo) {
     const user = await User.findById(id);
+
     if (!user) {
       throw new Error('User not found');
     }
   
-    for (const ingredientId of updateData) {
-      const ingredient = await Ingredient.findById(ingredientId);
+    for (const id of ingredientInfo) {
+      const ingredient = await Ingredient.findById(id);
       if (!ingredient) {
-        throw new Error(`Invalid Ingredient ID: ${ingredientId}`);
+        throw new Error(`Invalid Ingredient ID: ${id}`);
       }
   
 
@@ -94,29 +95,31 @@ class UserDAO {
   }
   
   //@desc update bookmark recipe 
-  async updateBookmark(id, updateData) {
+  async updateBookmark(id, recipeInfo) {
     const user = await User.findById(id);
+
     if (!user) {
       throw new Error('User not found');
     }
   
-    const recipes = [];
-  
-    for (const recipeId of updateData) {
-      const recipe = await Recipe.findById(recipeId);
+    for (const id of recipeInfo) {
+      const recipe = await Recipe.findById(id);
       if (!recipe) {
-        throw new Error(`Invalid Recipe ID: ${recipeId}`);
+        throw new Error(`Invalid Recipe ID: ${id}`);
       }
-      recipes.push(recipe);
-    }
   
-    user.recipes = recipes; 
+
+      const existingRecipeIndex = user.recipe.findIndex(item => item.equals(recipe._id));
+      if (existingRecipeIndex === -1) {
+
+        user.recipe.push(recipe);
+      }
+    }
   
     await user.save(); 
   
     return user;
   }
-  
 
   //@desc find userId
   async finduserId ( name, email ) {

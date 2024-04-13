@@ -110,8 +110,8 @@ const userController = {
   async putUpdateUserIngredients (req,res,next) {
     try {
       const { id } = res.locals.user; 
-      const updateData = req.body;
-      const updateIngredients = await userService.updateUserIngredients(id, updateData);
+      const { ingredients } = req.body;
+      const updateIngredients = await userService.updateUserIngredients(id, ingredients);
       res.status(200).json(utils.buildResponse(updateIngredients));
     } catch (error) {
       next(error);
@@ -123,8 +123,8 @@ const userController = {
   async putUpdateBookmark (req,res,next) {
     try {
       const { id } = res.locals.user; 
-      const updateData = req.body;
-      const updateBookmark = await userService.updateBookmark(id,updateData);
+      const { recipe } = req.body;
+      const updateBookmark = await userService.updateBookmark(id,recipe);
       res.status(200).json(utils.buildResponse(updateBookmark));
     } catch (error) {
       next(error);
