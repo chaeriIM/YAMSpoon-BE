@@ -99,7 +99,7 @@ const userController = {
       const { id } = res.locals.user; 
       console.log(id);
       const bookmarkRecipe = await userService.getUserBookmark(id);
-      res.status(200).json(utils.buildResponse(fridgeRecipe));
+      res.status(200).json(utils.buildResponse(bookmarkRecipe));
     } catch (error) {
       next(error);
     }
