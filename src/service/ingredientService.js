@@ -1,12 +1,15 @@
 const { ingredientDAO } = require('../data-access');
 
 class ingredientService {
-  getAllCategories() {
-    return ingredientDAO.findAllCategories();
+  async getAllCategories() {
+    return await ingredientDAO.findAllCategories();
   }
 
-  getIngredientsByCategoryId(categoryId) {
-    return ingredientDAO.findIngredientsByCategoryId(categoryId);
+  async getIngredientsByCategoryName(categoryName) {
+    // console.log(categoryName);
+    const ingredients = await ingredientDAO.findIngredientsByCategoryName(categoryName);
+    console.log(ingredients);
+    return ingredients;
   }
 }
 

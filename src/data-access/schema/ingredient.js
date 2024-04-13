@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const ingredientSchema = new mongoose.Schema({
   category : {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'ingredients_category'
+    ref: 'ingredient_category'
   },
   name: { 
     type: String, 

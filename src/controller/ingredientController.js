@@ -14,13 +14,15 @@ const ingredientController = {
   },
 
   async listIngredientsByCategory(req, res, next) {
-    const { categoryId } = req.params.categoryId;
-    const categoryWithIngredients = await ingredientService.getIngredientsByCategoryId(categoryId);
+    const categoryName  = req.params.categoryName;
+    // console.log(categoryName);
+    const ingredients = await ingredientService.getIngredientsByCategoryName(categoryName);
+    console.log(ingredients)
     try {
-      if (!categoryWithIngredients) {
+      if (!ingredients) {
         res.status(404).json(utils.buildResponse(null, "Category not found"));
       } else {
-        res.json(utils.buildResponse(categoryWithIngredients.ingredients));
+        res.json(utils.buildResponse(ingredients));
       }
     }catch (err) {
       next(err);

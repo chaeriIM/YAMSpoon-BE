@@ -9,7 +9,10 @@ ingredientRouter.get(
   ingredientController.listAllCategories);
 
 //개별 카테고리 조회
-ingredientRouter.get('/categories/:categoryId', ingredientController.listIngredientsByCategory);
+ingredientRouter.get(
+  '/categories/:categoryName', 
+  ingredientController.listIngredientsByCategory
+);
 
 
 module.exports = ingredientRouter;
