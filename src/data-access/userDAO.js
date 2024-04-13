@@ -53,7 +53,7 @@ class UserDAO {
 
   //@desc delete userInfo
   async deleteUser (id) {
-    return User.deleteOne(id);
+    return User.findByIdAndDelete(id);
   }
 
   //@ get user fridge
