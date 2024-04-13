@@ -68,9 +68,9 @@ const recipeController = {
   // 레시피 좋아요 수 업데이트
   async updateRecipeLikes(req, res, next) {
     try {
-      const { id } = req.params;
-      const { userId } = req.body; // 사용자 ID는 요청 본문에서 가져옴
-      const updatedRecipe = await recipeService.updateRecipeLikes(id, userId);
+      const { recipeId } = req.params;
+      const { id } = res.locals.user; // 사용자 ID는 요청 본문에서 가져옴
+      const updatedRecipe = await recipeService.updateRecipeLikes(recipeId, id);
       if (!updatedRecipe) {
         return res.status(404).json(utils.buildResponse(null, "Recipe not found"));
       }

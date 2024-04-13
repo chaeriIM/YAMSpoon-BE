@@ -1,5 +1,6 @@
 const express = require('express');
 const { recipeController }= require('../controller');
+const { authMiddleware } = require('../middleware');
 
 const recipeRouter = express.Router();
 
@@ -25,7 +26,9 @@ recipeRouter.get('/categories/:categoryId', recipeController.listRecipesByCatego
 recipeRouter.get('/:id', recipeController.getRecipe);
 
 // 레시피 좋아요 수 업데이트
-recipeRouter.put('/:id/like', recipeController.updateRecipeLikes);
+recipeRouter.put('/:id/like',
+  authMiddleware.isAuthenticated,
+  recipeController.updateRecipeLikes);
 
 
 module.exports = recipeRouter;

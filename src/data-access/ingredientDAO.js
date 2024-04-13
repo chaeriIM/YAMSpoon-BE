@@ -7,7 +7,8 @@ class ingredientDAO {
   }
 
   async findIngredientsByCategoryId(categoryId) {
-    return await Ingredient_Category.findById(categoryId).populate('ingredients').lean();
+    const ingredients = await Ingredient.find({ category: categoryId });
+    return ingredients;
   }
 
   async findIngredientsById (id) {
