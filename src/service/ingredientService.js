@@ -8,7 +8,7 @@ class ingredientService {
   async getIngredientsByCategoryName(categoryName) {
     // console.log(categoryName);
     const ingredients = await ingredientDAO.findIngredientsByCategoryName(categoryName);
-    console.log(ingredients);
+    // console.log(ingredients);
     return ingredients;
   }
 }
