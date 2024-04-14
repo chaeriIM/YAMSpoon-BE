@@ -49,7 +49,7 @@ const authController = {
   async postLogin (req,res,next) {
     try {
       const { userId, password } = req.body;
-      const token = await authService.Login ({
+      const token = await authService.login ({
         userId,
         plainPassword : password,
       });

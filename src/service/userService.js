@@ -121,15 +121,17 @@ class UserService {
       );
     }
   
-    const ingredients = [];
+    // const ingredients = [];
   
-    for (const ingredientId of user.ingredients) {
-      const ingredient = await ingredientDAO.findIngredientsById(ingredientId);
-      console.log(ingredient);
-      ingredients.push(ingredient); 
-    }
-  
-    return ingredients;
+    // for (const ingredientId of user.ingredients) {
+    //   const ingredient = await ingredientDAO.findIngredientsById(ingredientId);
+    //   console.log(ingredient);
+    //   ingredients.push(ingredient); 
+    // }
+    const ingredientPromises = user.ingredients.map((item) => ingredientDAO.findIngredientsById(item));
+    const ingredientInfo = await Promise.all(ingredientPromises);
+    return ingredientInfo;
+    
   }
 
     //@desc get user bookmark
@@ -142,16 +144,10 @@ class UserService {
           404,
         );
       }
-    
-      const recipes = [];
-    
-      for (const recipeId of user.recipe) {
-        const recipe = await recipeDAO.findById(recipeId);
-        // console.log(ingredient);
-        recipes.push(recipe); 
-      }
-    
-      return recipes; 
+
+      const bookmarkPromsies = user.recipe.map((item) => recipeDAO.findById(item));
+      const bookmarkInfo = await Promise.all(bookmarkPromsies);
+      return bookmarkInfo;
     }
 
   //@desc update user ingredients

@@ -92,9 +92,9 @@ class AuthService {
   }
 
   //@desc 사용자 인증
-  async Login( {userId, plainPassword} ) {
+  async login( {userId, plainPassword} ) {
     const user = await userDAO.findUserByUserId(userId);
-    console.log(userId);
+    // console.log(userId);
 
     if (!user) {
       throw new AppError(
