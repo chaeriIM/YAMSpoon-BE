@@ -46,15 +46,15 @@ class RecipeDAO {
 
   /** 재료별 페이지 */
   async findByIngredientId(ingredientId) {
-    const recipes = await Recipe.find({ ingredients: ingredientId }).lean();
+    const recipes = await Recipe.find({ "ingredients.ingredientId": ingredientId }).lean();
     return { recipes };
   }
 
 
   /** 레시피 타입별 페이지 */
   async findByCategoryId(categoryId) {
-    const recipes = await Recipe.find({ recipe_Category: categoryId }).lean();
-    return { recipes }
+    const recipes = await Recipe.find({ "recipe_Category.categoryId": categoryId }).lean();
+    return { recipes };
   }
   
   // /** 검색 결과 페이지 */
