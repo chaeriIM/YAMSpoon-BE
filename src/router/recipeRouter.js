@@ -26,7 +26,7 @@ recipeRouter.get('/categories/:categoryId', recipeController.listRecipesByCatego
 recipeRouter.get('/:id', recipeController.getRecipe);
 
 // 레시피 좋아요 수 업데이트
-recipeRouter.put('/:id/like',
+recipeRouter.put('/like/:id',
   authMiddleware.isAuthenticated,
   recipeController.updateRecipeLikes);
 

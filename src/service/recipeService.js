@@ -23,11 +23,22 @@ class RecipeService {
   }
 
   // 레시피 좋아요 수 업데이트
+  // async updateRecipeLikes(recipeId, userId) {
+  //   const recipe = await this.getRecipeById(recipeId);
+  //   const updatedLikes = recipe.like.includes(userId) ? recipe.like.filter(id => id !== userId) : [...recipe.like, userId];
+  //   return await recipeDAO.updateById(recipeId, { like: updatedLikes });
+  // }
   async updateRecipeLikes(recipeId, userId) {
     const recipe = await this.getRecipeById(recipeId);
-    const updatedLikes = recipe.like.includes(userId) ? recipe.like.filter(id => id !== userId) : [...recipe.like, userId];
+    if (!recipe) {
+      throw new Error('Recipe not found');
+    }
+    const updatedLikes = recipe.like.includes(userId) ?
+      recipe.like.filter(id => id !== userId) : // 문자열 직접 비교
+      [...recipe.like, userId];  // 직접 추가
     return await recipeDAO.updateById(recipeId, { like: updatedLikes });
   }
+  
   
   // 인기 레시피 조회
   async getPopularRecipes() {
