@@ -43,6 +43,16 @@ const recipeController = {
     }
   },
 
+  // 레시피 카테고리 전체 조회
+  async listAllCategories(req, res) {
+    try {
+      const categories = await recipeService.listAllCategories();
+      res.json(utils.buildResponse(categories));
+    } catch (err) {
+      next(err);
+    }
+  },
+
   // 카테고리 ID로 레시피 조회
   async listRecipesByCategory(req, res, next) {
     try {

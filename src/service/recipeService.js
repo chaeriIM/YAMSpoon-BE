@@ -49,6 +49,11 @@ class RecipeService {
   async getRecentRecipes() {
     return await recipeDAO.findRecent();
   }
+  
+  //레시피 카테고리 조회
+  async listAllCategories() {
+    return await recipeDAO.findAllCategories();
+  }
 
   //재료별 레시피 페이지네이션
   async getRecipesByIngredientIdPaginated(ingredientId, page, limit) {

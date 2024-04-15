@@ -1,4 +1,5 @@
 const { Recipe } = require("./model");
+const { Recipe_Category } = require("./model");
 
 class RecipeDAO {
   // async create(data) {
@@ -18,14 +19,17 @@ class RecipeDAO {
   }
 
   /** 레시피 좋아요 수업데이트 */
-async updateById(recipeId, userId) {
-  const options = { new: true };  // 업데이트된 문서를 반환받기 위한 옵션
-  return await Recipe.findByIdAndUpdate(recipeId, userId, options).lean();
-}
+  async updateById(recipeId, userId) {
+    const options = { new: true };  // 업데이트된 문서를 반환받기 위한 옵션
+    return await Recipe.findByIdAndUpdate(recipeId, userId, options).lean();
+  }
 
+    // 레시피 카테고리 전체 조회
+  async findAllCategories() {
+    return await Recipe_Category.find({}).lean();
+  }
 
-
-  /** 레시피 카테고리 조회 */
+  /** 레시피 카테고리로 레시피 조회 */
   async findByCategory(categoryId) {
     return await Recipe.find({ recipe_Category: categoryId }).lean();
   }
