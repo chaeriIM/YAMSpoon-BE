@@ -1,0 +1,59 @@
+const { recipeDAO } = require('../data-access');
+
+
+class RecipeService {
+  // 전체 레시피 조회
+  async getAllRecipes() {
+    return await recipeDAO.findAll();
+  }
+
+  // // 재료 ID로 레시피 조회
+  // async getRecipesByIngredientId(ingredientId) {
+  //   return await recipeDAO.findByIngredientId(ingredientId);
+  // }
+
+  // // 카테고리 ID로 레시피 조회
+  // async getRecipesByCategoryId(categoryId) {
+  //   return await recipeDAO.findByCategoryId(categoryId);
+  // }
+
+  // 레시피 ID로 단일 레시피 조회
+  async getRecipeById(recipeId) {
+    return await recipeDAO.findById(recipeId);
+  }
+
+  // 레시피 좋아요 수 업데이트
+  async updateRecipeLikes(recipeId, userId) {
+    const recipe = await this.getRecipeById(recipeId);
+    const updatedLikes = recipe.like.includes(userId) ? recipe.like.filter(id => id !== userId) : [...recipe.like, userId];
+    return await recipeDAO.updateById(recipeId, { like: updatedLikes });
+  }
+  
+  // 인기 레시피 조회
+  async getPopularRecipes() {
+    return await recipeDAO.findPopular();
+  }
+
+  // 최신 레시피 조회
+  async getRecentRecipes() {
+    return await recipeDAO.findRecent();
+  }
+
+  //재료별 레시피 페이지네이션
+  async getRecipesByIngredientIdPaginated(ingredientId, page, limit) {
+    return await recipeDAO.findByIngredientIdPaginated(ingredientId, page, limit);
+  }
+
+  //레시피 타입별 페이지네이션
+  async getRecipesByCategoryIdPaginated(categoryId, page, limit) {
+    return await recipeDAO.findByCategoryIdPaginated(categoryId, page, limit);
+  }
+  
+  // 레시피 검색 결과
+  async searchRecipesPaginated(keyword, page, limit =15, sort = 'score') {
+    return await recipeDAO.searchRecipesPaginated(keyword, page, limit, sort);
+  }
+    
+}
+
+module.exports = new RecipeService();
