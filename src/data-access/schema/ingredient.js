@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const ingredientSchema = new mongoose.Schema({
   category : {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'ingredient_category'
+    ref: 'ingredient_category',
+    require: true
   },
   name: { 
     type: String, 
@@ -14,8 +15,12 @@ const ingredientSchema = new mongoose.Schema({
 const ingredientCategorySchema = new mongoose.Schema({
   name: { 
     type: String, 
-    required: true 
-  }
+    required: true
+  },
+  ingredients: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Ingredient' 
+  }]
 });
 
 module.exports = { 

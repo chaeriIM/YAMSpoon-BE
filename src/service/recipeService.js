@@ -49,26 +49,26 @@ class RecipeService {
   async getRecentRecipes() {
     return await recipeDAO.findRecent();
   }
-  
+
   //레시피 카테고리 조회
   async listAllCategories() {
     return await recipeDAO.findAllCategories();
   }
 
-  //재료별 레시피 페이지네이션
-  async getRecipesByIngredientIdPaginated(ingredientId, page, limit) {
-    return await recipeDAO.findByIngredientIdPaginated(ingredientId, page, limit);
+  //재료별 레시피 개별 조회
+  async getRecipesByIngredientId(ingredientId) {
+    return await recipeDAO.findByIngredientId(ingredientId);
   }
 
-  //레시피 타입별 페이지네이션
-  async getRecipesByCategoryIdPaginated(categoryId, page, limit) {
-    return await recipeDAO.findByCategoryIdPaginated(categoryId, page, limit);
+  //레시피 타입별 개별 조회
+  async getRecipesByCategoryId(categoryId) {
+    return await recipeDAO.findByCategoryId(categoryId);
   }
   
-  // 레시피 검색 결과
-  async searchRecipesPaginated(keyword, page, limit =15, sort = 'score') {
-    return await recipeDAO.searchRecipesPaginated(keyword, page, limit, sort);
-  }
+  // // 레시피 검색 결과
+  // async searchRecipes(keyword, sort = 'score') {
+  //   return await recipeDAO.searchRecipesPaginated(keyword, sort);
+  // }
     
 }
 

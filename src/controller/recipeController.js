@@ -36,7 +36,7 @@ const recipeController = {
   async listRecipesByIngredient(req, res, next) {
     try {
       const { ingredientId } = req.params;
-      const recipes = await recipeService.getRecipesByIngredientIdPaginated(ingredientId);
+      const recipes = await recipeService.getRecipesByIngredientId(ingredientId);
       res.json(utils.buildResponse(recipes));
     } catch (err) {
       next(err);
@@ -57,7 +57,7 @@ const recipeController = {
   async listRecipesByCategory(req, res, next) {
     try {
       const { categoryId } = req.params;
-      const recipes = await recipeService.getRecipesByCategoryIdPaginated(categoryId);
+      const recipes = await recipeService.getRecipesByCategoryId(categoryId);
       res.json(utils.buildResponse(recipes));
     } catch (err) {
       next(err);
@@ -90,18 +90,18 @@ const recipeController = {
     }
   },
 
-  // 레시피 검색
-  async searchRecipes(req, res, next) {
-    try {
-      const { keyword, sort } = req.query;
-      const page = parseInt(req.query.page) || 1;
-      const limit = parseInt(req.query.limit) || 15;
-      const result = await recipeService.searchRecipesPaginated(keyword, page, limit, sort);
-      res.json(utils.buildResponse(result));
-    } catch (err) {
-      next(err);
-    }
-  }
+  // // 레시피 검색
+  // async searchRecipes(req, res, next) {
+  //   try {
+  //     const { keyword, sort } = req.query;
+  //     const page = parseInt(req.query.page) || 1;
+  //     const limit = parseInt(req.query.limit) || 15;
+  //     const result = await recipeService.searchRecipesPaginated(keyword, page, limit, sort);
+  //     res.json(utils.buildResponse(result));
+  //   } catch (err) {
+  //     next(err);
+  //   }
+  // }
 };
 
 module.exports = recipeController;

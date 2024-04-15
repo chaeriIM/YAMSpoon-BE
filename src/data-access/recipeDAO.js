@@ -45,61 +45,46 @@ class RecipeDAO {
   }
 
   /** 재료별 페이지 */
-  async findByIngredientIdPaginated(ingredientId, page, limit) {
-    const recipes = await Recipe.find({ ingredients: ingredientId })
-                                .skip((page - 1) * limit)
-                                .limit(limit)
-                                .lean();
-    const total = await Recipe.countDocuments({ ingredients: ingredientId });
-    return {
-      recipes,
-      totalPages: Math.ceil(total / limit),
-      currentPage: page
-    };
+  async findByIngredientId(ingredientId) {
+    const recipes = await Recipe.find({ ingredients: ingredientId }).lean();
+    return { recipes };
   }
+
 
   /** 레시피 타입별 페이지 */
-  async findByCategoryIdPaginated(categoryId, page, limit) {
-    const recipes = await Recipe.find({ recipe_Category: categoryId })
-                                .skip((page - 1) * limit)
-                                .limit(limit)
-                                .lean();
-    const total = await Recipe.countDocuments({ recipe_Category: categoryId });
-    return {
-      recipes,
-      totalPages: Math.ceil(total / limit),
-      currentPage: page
-    };
+  async findByCategoryId(categoryId) {
+    const recipes = await Recipe.find({ recipe_Category: categoryId }).lean();
+    return { recipes }
   }
   
-  /** 검색 결과 페이지 */
-  async searchRecipesPaginated(keyword, page, limit, sort = 'score') {
-    const query =  [
-      {$search : {
-      index : 'title_index',
-      text : { query : keyword, path : 'title' }
-      }}
-    ]
-    let sortOptions = { score: { $meta: "textScore" } };  // 기본값은 텍스트 검색 점수 순
+  // /** 검색 결과 페이지 */
+  // async searchRecipes(keyword, page, limit, sort = 'score') {
+  //   const query =  [
+  //     {$search : {
+  //     index : 'title_index',
+  //     text : { query : keyword, path : 'title' }
+  //     }}
+  //   ]
+  //   let sortOptions = { score: { $meta: "textScore" } };  // 기본값은 텍스트 검색 점수 순
 
-    if (sort === 'recent') {
-        sortOptions = { createdAt: -1 };  // 최신순 정렬
-    } else if (sort === 'popular') {
-        sortOptions = { 'like.length': -1 };  // 추천순 정렬
-    }
+  //   if (sort === 'recent') {
+  //       sortOptions = { createdAt: -1 };  // 최신순 정렬
+  //   } else if (sort === 'popular') {
+  //       sortOptions = { 'like.length': -1 };  // 추천순 정렬
+  //   }
 
-    const recipes = await Recipe.aggregate(query)
-                                .sort(sortOptions)
-                                .skip((page - 1) * limit)
-                                .limit(limit)
-    const total = await Recipe.countDocuments(query);
+  //   const recipes = await Recipe.aggregate(query)
+  //                               .sort(sortOptions)
+  //                               .skip((page - 1) * limit)
+  //                               .limit(limit)
+  //   const total = await Recipe.countDocuments(query);
 
-    return {
-        recipes,
-        totalPages: Math.ceil(total / limit),
-        currentPage: page
-    };
-  }
+  //   return {
+  //       recipes,
+  //       totalPages: Math.ceil(total / limit),
+  //       currentPage: page
+  //   };
+  // }
 }
 
 module.exports = new RecipeDAO();

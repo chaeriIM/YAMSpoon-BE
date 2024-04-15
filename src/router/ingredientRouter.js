@@ -10,7 +10,7 @@ ingredientRouter.get(
 
 //개별 카테고리 조회
 ingredientRouter.get(
-  '/categories/:categoryName', 
+  '/categories/:categoryId', 
   ingredientController.listIngredientsByCategory
 );
 

@@ -17,10 +17,13 @@ function sanitizeObject(obj) {
 // 일관된 응답 메시지를 보냄으로써 클라이언트가 응답으로 받은 데이터를 다루기 쉽게 해준다.
 // 
 function buildResponse(data, errorMessage) {
-  return {
-    error: errorMessage ?? null,
-    data,
-  };
+  if (errorMessage) {
+    return {
+      error: errorMessage,
+      data: null,
+    };
+  }
+  return { data };
 }
 
 module.exports = {
