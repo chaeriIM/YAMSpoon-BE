@@ -5,9 +5,9 @@ class ingredientService {
     return await ingredientDAO.findAllCategories();
   }
 
-  async getIngredientsByCategoryId(categoryName) {
+  async getIngredientsByCategoryId(categoryId) {
     // console.log(categoryName);
-    const ingredients = await ingredientDAO.findIngredientsByCategoryId(categoryName);
+    const ingredients = await ingredientDAO.findIngredientsByCategoryId(categoryId);
     // console.log(ingredients);
     return ingredients;
   }

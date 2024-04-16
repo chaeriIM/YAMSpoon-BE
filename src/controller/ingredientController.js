@@ -28,8 +28,8 @@ const ingredientController = {
     //   next(err);
     // }
     try {
-      const { categoryName } = req.params;
-      const ingredients = await ingredientService.getIngredientsByCategoryId(categoryName);
+      const { categoryId } = req.params;
+      const ingredients = await ingredientService.getIngredientsByCategoryId(categoryId);
       res.json(utils.buildResponse(ingredients));
     } catch (err) {
       next(err);
