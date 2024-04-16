@@ -35,8 +35,8 @@ async function create() {
 
   
   expressApp.use(cookieParser());
-  
-  express.use(cors({
+
+  expressApp.use(cors({
     credentials: true
   }));
 
