@@ -37,6 +37,7 @@ async function create() {
   expressApp.use(cookieParser());
 
   expressApp.use(cors({
+    origin:'http://kdt-sw-8-team06.elicecoding.com:3001',
     credentials: true
   }));
 
