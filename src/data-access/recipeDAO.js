@@ -36,8 +36,21 @@ class RecipeDAO {
 
   /** 좋아요 배열의 길이를 기준으로 정렬하여 가장 인기 있는 레시피를 조회 */
   async findPopular() {
-    return await Recipe.find().sort({ 'like.length': -1 }).limit(10).lean();
+    return await Recipe.aggregate([
+      {
+        $addFields: {
+          likeCount: { $size: "$like" } // 'like' 배열의 길이를 'likeCount'라는 새 필드로 추가
+        }
+      },
+      {
+        $sort: { likeCount: -1 } // 'likeCount' 필드를 기준으로 내림차순 정렬
+      },
+      {
+        $limit: 10 // 상위 10개 문서만 반환
+      }
+    ]);
   }
+  
 
   /** 생성 날짜 기준으로 최신 레시피를 조회 */
   async findRecent() {
