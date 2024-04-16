@@ -22,8 +22,8 @@ class ingredientDAO {
   //   // return ingredients;
   // }
 
-  async findIngredientsByCategoryId(categoryId) {
-    return await Ingredient.find({ category: categoryId }).lean();
+  async findIngredientsByCategoryId(categoryName) {
+    return await Ingredient.find({"Ingredient_Category.name": categoryName }).lean();
   }
   
 
