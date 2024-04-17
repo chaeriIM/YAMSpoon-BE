@@ -13,6 +13,7 @@ const apiRouter = require("./router");
 
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const cors = require('cors');
 const MongoStore = require('connect-mongo');
 
 // express application을 "생성"해주는 함수
@@ -34,6 +35,11 @@ async function create() {
 
   
   expressApp.use(cookieParser());
+
+  expressApp.use(cors({
+    origin:'http://kdt-sw-8-team06.elicecoding.com:3001',
+    credentials: true
+  }));
 
   expressApp.use(
     session({

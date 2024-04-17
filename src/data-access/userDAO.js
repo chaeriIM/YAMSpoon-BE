@@ -1,3 +1,4 @@
+const { all } = require('../router/recipeRouter');
 const { User } = require('./model');
 const { Ingredient } = require('./model');
 const { Recipe } = require('./model');
@@ -75,20 +76,17 @@ class UserDAO {
       throw new Error('User not found');
     }
   
-    for (const id of ingredientInfo) {
-      const ingredient = await Ingredient.findById(id);
-      if (!ingredient) {
-        throw new Error(`Invalid Ingredient ID: ${id}`);
-      }
-  
+    const ingredients = await Promise.all(ingredientInfo.map(async (ingredientId) => {
+      const ingredient = await Ingredient.findById(ingredientId);
 
-      const existingIngredientIndex = user.ingredients.findIndex(item => item.equals(ingredient._id));
-      if (existingIngredientIndex === -1) {
-
-        user.ingredients.push(ingredient);
+      if(!ingredient) {
+        throw new Error(`Invalid Ingredient ID : ${ingredientId}`);
       }
-    }
-  
+      return ingredient;
+    }))
+
+    user.ingredients = ingredients;
+    
     await user.save(); 
   
     return user;
@@ -102,19 +100,16 @@ class UserDAO {
       throw new Error('User not found');
     }
   
-    for (const id of recipeInfo) {
-      const recipe = await Recipe.findById(id);
+    const recipes = await Promise.all(recipeInfo.map(async (recipeId) => {
+      
+      const recipe = await Recipe.findById(recipeId);
       if (!recipe) {
-        throw new Error(`Invalid Recipe ID: ${id}`);
+        throw new Error(`Invalid Recipe ID: ${recipeId}`);
       }
-  
+      return recipe;
+    }));
 
-      const existingRecipeIndex = user.recipe.findIndex(item => item.equals(recipe._id));
-      if (existingRecipeIndex === -1) {
-
-        user.recipe.push(recipe);
-      }
-    }
+    user.recipe = recipes;
   
     await user.save(); 
   
