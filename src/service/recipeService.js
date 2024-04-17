@@ -7,9 +7,32 @@ class RecipeService {
     return await recipeDAO.findAll();
   }
 
-  //레시피 추가
-  async addRecipe(recipeData) {
+  // 레시피 추가 서비스
+  async addRecipe(recipeData, id) {
+    recipeData.creatorId = id;
     return await recipeDAO.create(recipeData);
+  }
+
+  // 레시피 수정
+  async updateRecipe(recipeId, recipeData, userId) {
+    // 사용자 ID를 검증하여 해당 사용자가 레시피를 수정할 권한이 있는지 확인
+    const existingRecipe = await recipeDAO.findById(recipeId);
+    if (!existingRecipe || existingRecipe.creatorId.toString() !== userId.toString()) {
+      return null;  // 권한이 없는 경우, null 반환
+    }
+  
+    return await recipeDAO.updateById(recipeId, recipeData);
+  }  
+
+  // 레시피 삭제 (assuming there is a method for it)
+  async deleteRecipe(recipeId, userId) {
+    // 사용자 ID를 검증하여 해당 사용자가 레시피를 삭제할 권한이 있는지 확인
+    const existingRecipe = await recipeDAO.findById(recipeId);
+    if (!existingRecipe || existingRecipe.creatorId.toString() !== userId.toString()) {
+      return false;  // 권한이 없는 경우, false 반환
+    }
+    await recipeDAO.deleteById(recipeId);
+    return true;
   }
 
   // // 재료 ID로 레시피 조회

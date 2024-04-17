@@ -12,16 +12,52 @@ const recipeController = {
     }
   },
 
-    // 레시피 추가
+  // 레시피 추가
   async createRecipe(req, res, next) {
     try {
-      const recipeData = req.body; // 요청 본문에서 레시피 데이터를 받음
-      const recipe = await recipeService.addRecipe(recipeData);
-      res.status(201).json(utils.buildResponse(recipe));
+        const recipeData = req.body;
+        const { id } = res.locals.user;
+        const recipe = await recipeService.addRecipe(recipeData, id);
+        res.status(201).json(utils.buildResponse(recipe));
     } catch (err) {
-      next(err); // 에러 처리
+        next(err);
     }
   },
+
+   // 레시피 수정
+  async updateRecipe(req, res, next) {
+    try {
+      const recipeId = req.params.id;
+      const recipeData = req.body;
+      const { id } = res.locals.user; // 로그인한 사용자의 ID
+      console.log(id);
+      const updatedRecipe = await recipeService.updateRecipe(recipeId, recipeData, id);
+      if (!updatedRecipe) {
+        return res.status(404).json({ error: "Recipe not found or user not authorized to modify" });
+      }
+      res.status(200).json(utils.buildResponse(updatedRecipe));
+    } catch (err) {
+      next(err);
+    }
+  },
+  
+
+  // 레시피 삭제
+  async deleteRecipe(req, res, next) {
+    try {
+      const recipeId = req.params.id;
+      const { id } = res.locals.user; // 로그인한 사용자의 ID
+  
+      const deleted = await recipeService.deleteRecipe(recipeId, id);
+      if (!deleted) {
+        return res.status(404).json({ error: "Recipe not found or user not authorized to delete" });
+      }
+      res.status(204).send();  // 성공적으로 삭제하면 204 No Content 응답
+    } catch (err) {
+      next(err);
+    }
+  },
+
 
 
   // 인기 레시피 조회
