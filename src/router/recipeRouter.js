@@ -8,7 +8,9 @@ const recipeRouter = express.Router();
 recipeRouter.get('/', recipeController.listAllRecipes);
 
 //레시피 추가
-recipeRouter.post('/', recipeController.createRecipe);
+recipeRouter.post('/', 
+  authMiddleware.isAuthenticated, 
+  recipeController.createRecipe);
 
 // // 레시피 검색
 // recipeRouter.get('/search', recipeController.searchRecipes);
@@ -30,6 +32,16 @@ recipeRouter.get('/ingredients/:ingredientId', recipeController.listRecipesByIng
 
 // 레시피 ID로 단일 레시피 조회
 recipeRouter.get('/:id', recipeController.getRecipe);
+
+//레시피 수정
+recipeRouter.put('/:id',
+  authMiddleware.isAuthenticated,
+  recipeController.updateRecipe);
+
+//레시피 삭제
+recipeRouter.delete('/:id',
+  authMiddleware.isAuthenticated,
+  recipeController.deleteRecipe);
 
 // 레시피 좋아요 수 업데이트
 recipeRouter.put('/like/:id',

@@ -15,6 +15,7 @@ const ingredientSchema = new mongoose.Schema({
   },
   name: {
     type: String,
+    ref: 'Ingredient',
     required: true
   },
   amount: {
@@ -35,6 +36,11 @@ const sauceSchema = new mongoose.Schema({
 }, { _id: false });
 
 const recipeSchema = new mongoose.Schema({
+  creatorId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   title: {
     type: String,
     required: true

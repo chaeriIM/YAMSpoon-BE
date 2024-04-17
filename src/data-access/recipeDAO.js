@@ -13,13 +13,23 @@ class RecipeDAO {
     return await Recipe.find({}).lean();
   }
 
-  // 레시피 추가
-  async create(data) {
-    const recipe = new Recipe(data);
+  // 레시피 추가 DAO
+  async create(recipeData) {
+    const recipe = new Recipe(recipeData);
     await recipe.save();
-    return recipe.toObject(); // MongoDB 문서를 일반 자바스크립트 객체로 변환
+    return recipe.toObject();
   }
 
+  // 레시피 수정
+  async updateById(recipeId, recipeData) {
+    const options = { new: true };
+    return await Recipe.findByIdAndUpdate(recipeId, recipeData, options).lean();
+  }
+
+  // 레시피 삭제
+  async deleteById(recipeId) {
+    await Recipe.findByIdAndDelete(recipeId);
+  }
 
   /** 레시피 아이디 개별 조회 */
   async findById(id) {
