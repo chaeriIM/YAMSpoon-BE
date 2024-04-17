@@ -128,6 +128,13 @@ class UserDAO {
     return user;
   }
 
+  //@desc find own's recipe
+  async findOwnRecipe (id) {
+    const recipe = await Recipe.find({creatorId : id});
+    // console.log(id);
+    return recipe;
+  }
+
 }
 
 module.exports = new UserDAO();

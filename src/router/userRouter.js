@@ -71,4 +71,10 @@ userRouter.put(
   userController.putUpdateBookmark
 );
 
+userRouter.get(
+  '/myRecipe',
+  authMiddleware.isAuthenticated,
+  userController.getOwnRecipe
+)
+
 module.exports = userRouter;

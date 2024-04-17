@@ -131,6 +131,17 @@ const userController = {
     }
   },
 
+  //@desc get own's recipe
+  //@route GET /user/myRecipe
+  async getOwnRecipe (req,res,next) {
+    try {
+      const { id } = res.locals.user;
+      const recipe = await userService.findOwnRecipe(id);
+      res.status(200).json(utils.buildResponse(recipe));
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = userController;

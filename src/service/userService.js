@@ -2,6 +2,7 @@
 const { userDAO } = require('../data-access');
 const { recipeDAO } = require('../data-access');
 const { ingredientDAO } =require('../data-access');
+const { User } = require('../data-access/model');
 const AppError = require('../misc/AppError');
 const commonErrors = require('../misc/commonErrors');
 const bcrypt = require('bcrypt');
@@ -160,6 +161,23 @@ class UserService {
   async updateBookmark (id, updateBookmark) {
     const user = await userDAO.updateBookmark(id,updateBookmark);
     return user;
+  }
+
+  async findOwnRecipe (id) {
+    const user = await User.findById(id);
+    // console.log(user);
+
+    if (!user) {
+      throw new Error ('User not found');
+    }
+
+    const recipe = await userDAO.findOwnRecipe(id);
+    console.log(recipe);
+
+    if(recipe.length === 0) {
+      throw new Error ("user's reicpe not found");
+    } 
+    return recipe;
   }
 }
 
