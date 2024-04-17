@@ -7,6 +7,11 @@ class RecipeService {
     return await recipeDAO.findAll();
   }
 
+  //레시피 추가
+  async addRecipe(recipeData) {
+    return await recipeDAO.create(recipeData);
+  }
+
   // // 재료 ID로 레시피 조회
   // async getRecipesByIngredientId(ingredientId) {
   //   return await recipeDAO.findByIngredientId(ingredientId);

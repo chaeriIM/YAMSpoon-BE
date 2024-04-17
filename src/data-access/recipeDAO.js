@@ -13,6 +13,14 @@ class RecipeDAO {
     return await Recipe.find({}).lean();
   }
 
+  // 레시피 추가
+  async create(data) {
+    const recipe = new Recipe(data);
+    await recipe.save();
+    return recipe.toObject(); // MongoDB 문서를 일반 자바스크립트 객체로 변환
+  }
+
+
   /** 레시피 아이디 개별 조회 */
   async findById(id) {
     return await Recipe.findById(id).lean();

@@ -7,6 +7,9 @@ const recipeRouter = express.Router();
 // 전체 레시피 조회
 recipeRouter.get('/', recipeController.listAllRecipes);
 
+//레시피 추가
+recipeRouter.post('/', recipeController.createRecipe);
+
 // // 레시피 검색
 // recipeRouter.get('/search', recipeController.searchRecipes);
 

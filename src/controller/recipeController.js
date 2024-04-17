@@ -12,6 +12,18 @@ const recipeController = {
     }
   },
 
+    // 레시피 추가
+  async createRecipe(req, res, next) {
+    try {
+      const recipeData = req.body; // 요청 본문에서 레시피 데이터를 받음
+      const recipe = await recipeService.addRecipe(recipeData);
+      res.status(201).json(utils.buildResponse(recipe));
+    } catch (err) {
+      next(err); // 에러 처리
+    }
+  },
+
+
   // 인기 레시피 조회
   async listPopularRecipes(req, res, next) {
     try {

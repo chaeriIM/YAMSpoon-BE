@@ -7,6 +7,33 @@ const recipeCategorySchema = new mongoose.Schema({
   }
 });
 
+const ingredientSchema = new mongoose.Schema({
+  ingredientId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Ingredient',
+    required: true
+  },
+  name: {
+    type: String,
+    required: true
+  },
+  amount: {
+    type: String,
+    required: true
+  }
+}, { _id: false });
+
+const sauceSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  amount: {
+    type: String,
+    required: true
+  }
+}, { _id: false });
+
 const recipeSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -20,31 +47,8 @@ const recipeSchema = new mongoose.Schema({
     type: String,
     required: true
   }],
-  ingredients: [{
-    ingredientId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Ingredient',
-      required: true
-    },
-    name: {
-      type: String,
-      required: true
-    },
-    amount: {
-      type: String,
-      required: true
-    }
-  }],
-  sauce: [{
-    name: { 
-      type: String,
-      required: true
-    },
-    amount: { 
-      type: String, 
-      required: true 
-    }
-  }],
+  ingredients: [ingredientSchema], 
+  sauce: [sauceSchema],           
   like: [{
     type: String,
     ref: 'User',
@@ -67,6 +71,7 @@ const recipeSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true,
+  versionKey: false
 });
 
 module.exports = {
