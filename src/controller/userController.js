@@ -137,9 +137,10 @@ const userController = {
   async getOwnRecipe (req,res,next) {
     try {
       const { id } = res.locals.user;
-      console.log(id);
+      // console.log(id);
       const recipe = await userDAO.findOwnRecipe(id);
-      res.status(200).json(utils.buildResponse(recipe));
+      console.log(recipe.length);
+      res.status(200).json(utils.buildResponse({ recipe, userOid: id }));
     } catch (error) {
       next(error);
     }
