@@ -51,14 +51,14 @@ class UserService {
     }
 
     const updateUser = await userDAO.updateUser(id,updateData);
-    const newToken = jwt.sign({
-      id: updateUser._id,
-      userId : updateUser.userId,
-      nickname:updateUser.nickname,
-      isAdmin: updateUser.isAdmin,
-    }, config.jwtSecret);
+    // const newToken = jwt.sign({
+    //   id: updateUser._id,
+    //   userId : updateUser.userId,
+    //   nickname:updateUser.nickname,
+    //   isAdmin: updateUser.isAdmin,
+    // }, config.jwtSecret);
     
-    return {updateUser, newToken};
+    return updateUser;
   }
   
     //@desc delete userInfo
@@ -146,6 +146,7 @@ class UserService {
 //@desc get user bookmark
 async getUserBookmark(id) {
   const user = await userDAO.findUserById(id);
+
   if (!user) {
     throw new AppError(
       commonErrors.resourceNotFoundError,
