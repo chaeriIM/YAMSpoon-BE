@@ -184,23 +184,6 @@ async getUserBookmark(id) {
     const user = await userDAO.updateBookmark(id,updateBookmark);
     return user;
   }
-
-  async findOwnRecipe (id) {
-    const user = await User.findById(id);
-    // console.log(user);
-
-    if (!user) {
-      throw new Error ('User not found');
-    }
-
-    const recipe = await userDAO.findOwnRecipe(id);
-    console.log(recipe);
-
-    if(recipe.length === 0) {
-      throw new Error ("user's reicpe not found");
-    } 
-    return {recipe, userOid : user._id};
-  }
 }
 
 module.exports = new UserService();
