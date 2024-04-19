@@ -148,6 +148,8 @@ class UserService {
     
       // user.recipe 배열에서 null이 아닌 ObjectId들을 필터링하고 ObjectId로 매핑
       const validRecipeIds = user.recipe.filter(Boolean);
+      user.recipe = validRecipeIds;
+      await user.save();
     
       // Promise.all을 사용하여 모든 레시피의 Promise들이 resolve될 때까지 기다린 후에 해당 레시피들의 배열을 반환
       const bookmark = await Promise.all(validRecipeIds.map((recipeId) => recipeDAO.findById(recipeId)));
