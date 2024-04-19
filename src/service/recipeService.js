@@ -33,7 +33,7 @@ async updateRecipe(recipeId, updateData) {
       throw new Error('Recipe not found');
     }
 
-    if (updateData.img && recipe.img !== updateData.img) {
+    if (updateData.img && recipe.img && recipe.img !== updateData.img) {
       const oldImageKey = recipe.img.split('/').pop();
       await uploadMiddleware.deleteS3File(oldImageKey);
     }
