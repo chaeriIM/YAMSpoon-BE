@@ -6,6 +6,8 @@ const { User } = require('../data-access/model');
 const AppError = require('../misc/AppError');
 const commonErrors = require('../misc/commonErrors');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const config = require('../config');
 
 class UserService {
 
@@ -49,8 +51,14 @@ class UserService {
     }
 
     const updateUser = await userDAO.updateUser(id,updateData);
-
-    return updateUser
+    const newToken = jwt.sign({
+      id: updateUser._id,
+      userId : updateUser.userId,
+      nickname:updateUser.nickname,
+      isAdmin: updateUser.isAdmin,
+    }, config.jwtSecret);
+    
+    return {updateUser, newToken};
   }
   
     //@desc delete userInfo
@@ -135,25 +143,35 @@ class UserService {
     
   }
 
-    //@desc get user bookmark
-    async getUserBookmark(id) {
-      const user = await userDAO.findUserById(id);
-      if (!user) {
-        throw new AppError(
-          commonErrors.resourceNotFoundError,
-          '해당하는 사용자를 찾을 수 없습니다.',
-          404,
-        );
-      }
-    
-      // user.recipe 배열에서 null이 아닌 ObjectId들을 필터링하고 ObjectId로 매핑
-      const validRecipeIds = user.recipe.filter(Boolean);
-    
-      // Promise.all을 사용하여 모든 레시피의 Promise들이 resolve될 때까지 기다린 후에 해당 레시피들의 배열을 반환
-      const bookmark = await Promise.all(validRecipeIds.map((recipeId) => recipeDAO.findById(recipeId)));
-    
-      return bookmark;
-    }
+//@desc get user bookmark
+async getUserBookmark(id) {
+  const user = await userDAO.findUserById(id);
+  if (!user) {
+    throw new AppError(
+      commonErrors.resourceNotFoundError,
+      '해당하는 사용자를 찾을 수 없습니다.',
+      404,
+    );
+  }
+  
+  const promises = user.recipe.map(async (item) => {
+    const recipe = await recipeDAO.findById(item);
+    return recipe;
+  });
+
+
+  const resolvedRecipes = await Promise.all(promises);
+  const validRecipes = resolvedRecipes.filter(recipe => recipe !== null);
+
+  user.recipe = validRecipes.map(recipe => recipe._id);
+  
+  await user.save();
+  
+  const bookmark = await Promise.all(validRecipes.map(recipe => recipeDAO.findById(recipe._id)));
+
+  return bookmark;
+}
+
 
   //@desc update user ingredients
   async updateUserIngredients (id,updateIngredients) {
