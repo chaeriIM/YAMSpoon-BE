@@ -131,7 +131,7 @@ class UserDAO {
   //@desc find own's recipe
   async findOwnRecipe (id) {
     const recipe = await Recipe.find({creatorId : id});
-    // console.log(id);
+    console.log(id);
     return recipe;
   }
 

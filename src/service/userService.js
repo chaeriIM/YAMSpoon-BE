@@ -185,6 +185,10 @@ async getUserBookmark(id) {
     const user = await userDAO.updateBookmark(id,updateBookmark);
     return user;
   }
+  // //@desc find own recipe
+  // async findOwnRecipe (id) {
+  //   const user = userDAO.
+  // }
 }
 
 module.exports = new UserService();

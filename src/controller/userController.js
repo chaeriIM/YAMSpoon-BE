@@ -1,5 +1,6 @@
 const { userService } = require('../service');
 const utils = require('../misc/utils');
+const { userDAO } = require('../data-access')
 
 const userController = {
   //@desc get userInfo
@@ -136,7 +137,8 @@ const userController = {
   async getOwnRecipe (req,res,next) {
     try {
       const { id } = res.locals.user;
-      const recipe = await userService.findOwnRecipe(id);
+      console.log(id);
+      const recipe = await userDAO.findOwnRecipe(id);
       res.status(200).json(utils.buildResponse(recipe));
     } catch (error) {
       next(error);
