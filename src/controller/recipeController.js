@@ -12,53 +12,98 @@ const recipeController = {
     }
   },
 
-  // 레시피 추가
+// 레시피 추가
   async createRecipe(req, res, next) {
     try {
-        const recipeData = req.body;
-        const { id } = res.locals.user;
-        const recipe = await recipeService.addRecipe(recipeData, id);
-        res.status(201).json(utils.buildResponse(recipe));
+      if (!res.locals.user) {
+        return res.status(401).json({ error: "Authentication required" });
+      }
+
+      const { id , nickname } = res.locals.user;
+      let img = req.file ? req.file.location : '';
+      const { title, description, content, ingredients, sauce, recipe_Category } = req.body;
+
+      const recipe = await recipeService.createRecipe(
+        id,
+        nickname,
+        title,
+        description,
+        content,
+        ingredients,
+        sauce,
+        recipe_Category,
+        img,
+      );
+      res.status(200).json(utils.buildResponse(recipe));
     } catch (err) {
-        next(err);
+      next(err);
     }
   },
 
-   // 레시피 수정
+  // 레시피 수정
   async updateRecipe(req, res, next) {
+    const { id, nickname } = res.locals.user;
+    let img = req.file ? req.file.location : undefined;
+    const { title, description, content, ingredients, sauce, recipe_Category } = req.body;
+    const { id: recipeId } = req.params; // URL 파라미터에서 레시피 ID 추출
+
     try {
-      const recipeId = req.params.id;
-      const recipeData = req.body;
-      const { id } = res.locals.user; // 로그인한 사용자의 ID
-      console.log(id);
-      const updatedRecipe = await recipeService.updateRecipe(recipeId, recipeData, id);
-      if (!updatedRecipe) {
-        return res.status(404).json({ error: "Recipe not found or user not authorized to modify" });
+      const recipeInfo = await recipeService.getRecipeById(recipeId); // 데이터베이스에서 레시피 조회
+
+      if (!recipeInfo) {
+        return res.status(404).json(utils.buildResponse(null, "Recipe not found")); // 레시피가 없는 경우 오류 반환
       }
+
+      if (recipeInfo.creatorId.toString() !== id) {
+        return res.status(403).json(utils.buildResponse(null, "You are not authorized to update this recipe")); // 작성자가 아닐 경우 권한 오류 반환
+      }
+
+      // 이미지가 업로드되지 않았다면 기존 이미지 유지
+      if (!img && recipeInfo.img) {
+        img = recipeInfo.img;
+      }
+
+      const updateData = {
+        title,
+        description,
+        content,
+        ingredients,
+        sauce,
+        recipe_Category,
+        img,
+        nickname
+      };
+
+      const sanitizedUpdateData = utils.sanitizeObject(updateData); // undefined 항목 제거
+      const updatedRecipe = await recipeService.updateRecipe(recipeId, sanitizedUpdateData); // 업데이트 로직 호출
       res.status(200).json(utils.buildResponse(updatedRecipe));
     } catch (err) {
-      next(err);
+      next(err); // 에러 처리
     }
   },
-  
 
-  // 레시피 삭제
-  async deleteRecipe(req, res, next) {
-    try {
-      const recipeId = req.params.id;
-      const { id } = res.locals.user; // 로그인한 사용자의 ID
-  
-      const deleted = await recipeService.deleteRecipe(recipeId, id);
-      if (!deleted) {
-        return res.status(404).json({ error: "Recipe not found or user not authorized to delete" });
+// 레시피 삭제 컨트롤러
+async deleteRecipe(req, res, next) {
+  const { id } = res.locals.user;  // 로그인한 사용자 ID
+  const recipeId = req.params.id;  // URL에서 레시피 ID 추출
+
+  try {
+      const recipeInfo = await recipeService.getRecipeById(recipeId);  // 레시피 정보 조회
+
+      if (!recipeInfo) {
+          return res.status(404).json(utils.buildResponse(null, "Recipe not found"));
       }
-      res.status(204).send();  // 성공적으로 삭제하면 204 No Content 응답
-    } catch (err) {
+
+      if (recipeInfo.creatorId.toString() !== id) {
+          return res.status(403).json(utils.buildResponse(null, "You are not authorized to delete this recipe"));
+      }
+
+      await recipeService.deleteRecipe(recipeId);  // 레시피 삭제
+      res.status(200).json(utils.buildResponse(null, "Recipe deleted successfully"));
+  } catch (err) {
       next(err);
     }
   },
-
-
 
   // 인기 레시피 조회
   async listPopularRecipes(req, res, next) {

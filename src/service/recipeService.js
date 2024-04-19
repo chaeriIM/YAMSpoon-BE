@@ -1,5 +1,5 @@
 const { recipeDAO } = require('../data-access');
-
+const { uploadMiddleware } = require('../middleware');
 
 class RecipeService {
   // 전체 레시피 조회
@@ -7,33 +7,67 @@ class RecipeService {
     return await recipeDAO.findAll();
   }
 
-  // 레시피 추가 서비스
-  async addRecipe(recipeData, id) {
-    recipeData.creatorId = id;
-    return await recipeDAO.create(recipeData);
+  // 레시피 추가
+  async createRecipe(id, nickname, title, description, content, ingredients, sauce, recipe_Category, img,) {
+    //recipeData.creatorId = id;
+    const newRecipeData = {
+      creatorId: id,
+      creatorNickName : nickname,
+      title: title,
+      description: description,
+      content: content,
+      ingredients: ingredients,
+      sauce: sauce,
+      recipe_Category: recipe_Category,
+      img: img,
+    };
+    const createRecipe = await recipeDAO.create(newRecipeData);
+    return createRecipe
   }
 
-  // 레시피 수정
-  async updateRecipe(recipeId, recipeData, userId) {
-    // 사용자 ID를 검증하여 해당 사용자가 레시피를 수정할 권한이 있는지 확인
-    const existingRecipe = await recipeDAO.findById(recipeId);
-    if (!existingRecipe || existingRecipe.creatorId.toString() !== userId.toString()) {
-      return null;  // 권한이 없는 경우, null 반환
+// 레시피 수정
+async updateRecipe(recipeId, updateData) {
+  try {
+    const recipe = await recipeDAO.findById(recipeId);
+    if (!recipe) {
+      throw new Error('Recipe not found');
     }
-  
-    return await recipeDAO.updateById(recipeId, recipeData);
-  }  
 
-  // 레시피 삭제 (assuming there is a method for it)
-  async deleteRecipe(recipeId, userId) {
-    // 사용자 ID를 검증하여 해당 사용자가 레시피를 삭제할 권한이 있는지 확인
-    const existingRecipe = await recipeDAO.findById(recipeId);
-    if (!existingRecipe || existingRecipe.creatorId.toString() !== userId.toString()) {
-      return false;  // 권한이 없는 경우, false 반환
+    if (updateData.img && recipe.img !== updateData.img) {
+      const oldImageKey = recipe.img.split('/').pop();
+      await uploadMiddleware.deleteS3File(oldImageKey);
     }
-    await recipeDAO.deleteById(recipeId);
-    return true;
+
+    const updatedRecipe = await recipeDAO.update(recipeId, updateData);
+    return updatedRecipe;
+  } catch (error) {
+    console.error(`Failed to update recipe: ${error.message}`);
+    throw new Error(`Failed to update recipe: ${error.message}`);
   }
+}
+
+
+// 레시피 삭제 서비스
+async deleteRecipe(recipeId) {
+  try {
+      const recipe = await recipeDAO.findById(recipeId);
+      if (!recipe) {
+          throw new Error('Recipe not found');
+      }
+
+      // S3에서 레시피 관련 이미지 파일 삭제
+      if (recipe.img) {
+          const imageKey = recipe.img.split('/').pop();
+          await uploadMiddleware.deleteS3File(imageKey);
+      }
+
+      await recipeDAO.delete(recipeId);  // DB에서 레시피 삭제
+  } catch (error) {
+      console.error(`Failed to delete recipe: ${error.message}`);
+      throw new Error(`Failed to delete recipe: ${error.message}`);
+  }
+}
+
 
   // // 재료 ID로 레시피 조회
   // async getRecipesByIngredientId(ingredientId) {
