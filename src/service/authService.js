@@ -117,6 +117,7 @@ class AuthService {
     const userToken = jwt.sign({
       id: user._id,
       userId,
+      nickname:user.nickname,
       isAdmin: user.isAdmin,
     }, config.jwtSecret);
 

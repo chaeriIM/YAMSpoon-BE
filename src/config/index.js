@@ -42,6 +42,10 @@ const sessionStoreUrl = process.env.SESSION_STORE_URL;
 
 const cookieMaxAge = process.env.COOKIE_MAX_AGE;
 
+const s3Key = process.env.S3_KEY;
+
+const s3Secret = process.env.S3_SECRET;
+
 module.exports = {
   applicationName: process.env.APPLICATION_NAME ?? "app", // 어플리케이션 이름
 
@@ -64,4 +68,8 @@ module.exports = {
   sessionStoreUrl: sessionStoreUrl,
   
   cookieMaxAge: parseInt(cookieMaxAge) || 180000,
+
+  s3Key: s3Key,
+
+  s3Secret: s3Secret,
 };

@@ -20,7 +20,7 @@ const ingredientSchema = new mongoose.Schema({
   },
   amount: {
     type: String,
-    required: true
+    required: false
   }
 }, { _id: false });
 
@@ -31,7 +31,7 @@ const sauceSchema = new mongoose.Schema({
   },
   amount: {
     type: String,
-    required: true
+    required: false
   }
 }, { _id: false });
 
@@ -39,6 +39,10 @@ const recipeSchema = new mongoose.Schema({
   creatorId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
+    required: true
+  },
+  creatorNickName: {
+    type: String,
     required: true
   },
   title: {
@@ -55,13 +59,12 @@ const recipeSchema = new mongoose.Schema({
   }],
   ingredients: [ingredientSchema], 
   sauce: [sauceSchema],           
-  like: [{
-    type: String,
-    ref: 'User',
-    required: false
-  }],
-  img: {
+  like: {
     type: [String],
+     default: []
+  },
+  img: {
+    type: String,
     required: false
   },
   recipe_Category: {
@@ -74,9 +77,12 @@ const recipeSchema = new mongoose.Schema({
       type: String,
       required: true
     }
-  }
+  },
+  createdAt: {
+    type: Date,
+		default: () => Date.now() + 9 * 60 * 60 * 1000,
+  },
 }, {
-  timestamps: true,
   versionKey: false
 });
 

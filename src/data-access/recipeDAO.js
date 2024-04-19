@@ -13,23 +13,23 @@ class RecipeDAO {
     return await Recipe.find({}).lean();
   }
 
-  // 레시피 추가 DAO
-  async create(recipeData) {
-    const recipe = new Recipe(recipeData);
+  // 레시피 추가
+  async create(newRecipeData) {
+    const recipe = new Recipe(newRecipeData);
     await recipe.save();
     return recipe.toObject();
   }
 
-  // 레시피 수정
-  async updateById(recipeId, recipeData) {
-    const options = { new: true };
-    return await Recipe.findByIdAndUpdate(recipeId, recipeData, options).lean();
+  // 레시피 수정 DAO
+  async update(recipeId, updateData) {
+    return await Recipe.findByIdAndUpdate(recipeId, updateData, { new: true, runValidators: true });
   }
 
-  // 레시피 삭제
-  async deleteById(recipeId) {
-    await Recipe.findByIdAndDelete(recipeId);
-  }
+// 레시피 삭제 DAO
+async delete(recipeId) {
+  return await Recipe.findByIdAndDelete(recipeId);
+}
+
 
   /** 레시피 아이디 개별 조회 */
   async findById(id) {

@@ -1,6 +1,6 @@
 const express = require('express');
 const { recipeController }= require('../controller');
-const { authMiddleware } = require('../middleware');
+const { authMiddleware, uploadMiddleware } = require('../middleware');
 
 const recipeRouter = express.Router();
 
@@ -8,8 +8,9 @@ const recipeRouter = express.Router();
 recipeRouter.get('/', recipeController.listAllRecipes);
 
 //레시피 추가
-recipeRouter.post('/', 
-  authMiddleware.isAuthenticated, 
+recipeRouter.post('/',
+  authMiddleware.isAuthenticated,
+  uploadMiddleware.upload.single('img'), 
   recipeController.createRecipe);
 
 // // 레시피 검색
@@ -36,6 +37,7 @@ recipeRouter.get('/:id', recipeController.getRecipe);
 //레시피 수정
 recipeRouter.put('/:id',
   authMiddleware.isAuthenticated,
+  uploadMiddleware.upload.single('img'),
   recipeController.updateRecipe);
 
 //레시피 삭제
